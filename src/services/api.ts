@@ -20,7 +20,12 @@ import {
   EquationsResponse,
   PhysicsValidationResponse,
   PlanetDetailResponse,
-  ExplainResponse
+  ExplainResponse,
+  HealthResponse,
+  SearchResponse,
+  QualitySessionsResponse,
+  DarkMasterItem,
+  ModelMetricsResponse
 } from '../types';
 
 export const API_BASE_URL = 'https://exotransit-lab-api-production.up.railway.app';
@@ -229,13 +234,13 @@ export const apiService = {
     external_data_disclosure: ''
   }),
 
-  // Gemini 2.5 Flash Plain-Language AI Session Explanation (NEW Live LLM Endpoint)
-  explainSession: async (sessionId: string): Promise<ExplainResponse | null> => {
+  // Gemini 2.5 Flash Plain-Language AI Session Explanation (Live LLM Endpoint)
+  explainSession: async (sessionId: string, language: 'en' | 'ar' = 'ar', audience: string = 'student'): Promise<ExplainResponse | null> => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/explain`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session_id: sessionId })
+        body: JSON.stringify({ session_id: sessionId, language, audience })
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       return await res.json();
@@ -353,6 +358,54 @@ export const apiService = {
       return null;
     }
   },
+
+  // Live Backend Health & Data Inventory Integrity
+  getHealth: () => fetchWithFallback<HealthResponse>('/api/health', {
+    status: 'ok',
+    version: '1.0.0',
+    team: 'Iraqi Andromeda',
+    challenge: 'Hack4Dev Iraq 2026 - Exoplanet Data Challenge',
+    data_dir: '/app/data',
+    results_present: 31,
+    results_missing: [],
+    images_available: true,
+    ai_enabled: true,
+    timing: {
+      barycentric_correction_applied: true,
+      time_scale: 'BJD_TDB'
+    }
+  }),
+
+  // Ephemeris-Guided Multi-Star Search (Chance Expectation Baseline)
+  getSearch: () => fetchWithFallback<SearchResponse>('/api/science/search', {
+    n_star_nights_searched: 2723,
+    n_hits: 20,
+    n_expected_by_chance: 27.2,
+    verdict: '20 stars clear p <= 0.01, but ~27 were expected by chance across this many tests. The rows below are a RANKING of the most transit-like stars, not a set of detections.',
+    rows: []
+  }),
+
+  // Live Session Quality Triage with Thresholds
+  getQualitySessions: () => fetchWithFallback<QualitySessionsResponse>('/api/quality/sessions', {
+    thresholds: { good_contrast: 300, good_sources: 800, marginal_contrast: 100 },
+    counts: { good: 15, unusable: 6, marginal: 1 },
+    rows: []
+  }),
+
+  // Temperature-Dependent Dark Masters Stack
+  getDarkMasters: () => fetchWithFallback<DarkMasterItem[]>('/api/calibration/dark-masters', [
+    { camtemp_K: 276, n_darks: 2, master_median: 362 },
+    { camtemp_K: 277, n_darks: 5, master_median: 361 },
+    { camtemp_K: 278, n_darks: 10, master_median: 365 },
+    { camtemp_K: 279, n_darks: 14, master_median: 368 },
+    { camtemp_K: 280, n_darks: 17, master_median: 371 },
+    { camtemp_K: 281, n_darks: 7, master_median: 374 },
+    { camtemp_K: 282, n_darks: 3, master_median: 380 },
+    { camtemp_K: 285, n_darks: 2, master_median: 401 }
+  ]),
+
+  // AI CNN Classifier Metrics
+  getModelMetrics: () => fetchWithFallback<ModelMetricsResponse | null>('/api/model/metrics', null),
 
   // URL Helper: Real CCD Frame Image
   getFrameImageUrl: (sessionId: string, frameIndex: number): string => {

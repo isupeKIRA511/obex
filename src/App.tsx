@@ -161,7 +161,7 @@ export const App: React.FC = () => {
           />
 
           {/* Dynamic Workspace Canvas */}
-          <main className="flex-1 p-6 lg:p-8 flex flex-col items-center overflow-y-auto w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+          <main className="flex-1 p-6 lg:p-8 flex flex-col items-center overflow-y-auto w-full transition-all duration-400 ease-in-out">
             {activeTab === 'bento' && (
               <ErrorBoundary fallbackTitle="Mission Control Hub Error">
                 <BentoHero

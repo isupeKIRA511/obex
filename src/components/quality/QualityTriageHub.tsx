@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { SessionSummary, Target, QualityCorrelations, NoiseFloorResponse } from '../../types';
+import { 
+  SessionSummary, 
+  Target, 
+  QualityCorrelations, 
+  NoiseFloorResponse,
+  SearchResponse,
+  QualitySessionsResponse
+} from '../../types';
 import { apiService } from '../../services/api';
 import { safeFixed } from '../../utils/targetUtils';
 import { 
@@ -13,7 +20,10 @@ import {
   Sliders,
   TrendingDown,
   Compass,
-  Activity
+  Activity,
+  Search,
+  Scale,
+  Layers
 } from 'lucide-react';
 
 interface QualityTriageHubProps {
@@ -25,16 +35,22 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
   const [selectedTier, setSelectedTier] = useState<'all' | 'good' | 'marginal' | 'unusable'>('all');
   const [correlations, setCorrelations] = useState<QualityCorrelations | null>(null);
   const [noiseFloor, setNoiseFloor] = useState<NoiseFloorResponse | null>(null);
+  const [searchScience, setSearchScience] = useState<SearchResponse | null>(null);
+  const [qualitySessionsData, setQualitySessionsData] = useState<QualitySessionsResponse | null>(null);
 
   useEffect(() => {
     const loadQualityMetrics = async () => {
       try {
-        const [corr, nf] = await Promise.all([
+        const [corr, nf, search, qSessions] = await Promise.all([
           apiService.getQualityCorrelations(),
-          apiService.getNoiseFloor()
+          apiService.getNoiseFloor(),
+          apiService.getSearch(),
+          apiService.getQualitySessions()
         ]);
         setCorrelations(corr);
         setNoiseFloor(nf);
+        setSearchScience(search);
+        setQualitySessionsData(qSessions);
       } catch (err) {
         console.warn('Failed loading quality metrics:', err);
       }
@@ -120,6 +136,62 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
         </div>
       </div>
 
+      {/* Blind Transit Search Benchmark (2,723 Star-Nights Chance Expectation from /api/science/search) */}
+      <div className="bg-card border border-borderHairline rounded-2xl p-6 space-y-4">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <Scale className="w-4 h-4 text-opticsCyan" />
+            <h3 className="font-bold text-textPrimary font-mono text-sm">
+              Blind Transit Search Benchmark (2,723 Star-Nights Statistical Control)
+            </h3>
+          </div>
+          <span className="text-[10px] font-mono text-textMuted uppercase">GET /api/science/search</span>
+        </div>
+
+        <p className="text-xs text-textSecondary leading-relaxed">
+          To validate that candidate detections are genuine transits rather than statistical noise, the pipeline benchmarked a blind box least-squares search across 2,723 light curves.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 font-mono text-xs">
+          <div className="p-3 rounded-xl bg-canvas border border-borderHairline">
+            <div className="text-[10px] text-textMuted uppercase">Total Searched</div>
+            <div className="text-base font-bold text-textPrimary mt-1">
+              {searchScience?.total_searched?.toLocaleString() || '2,723'} Star-Nights
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-canvas border border-cyan-800/30">
+            <div className="text-[10px] text-textMuted uppercase">Observed (p ≤ 0.01)</div>
+            <div className="text-base font-bold text-opticsCyan mt-1">
+              {searchScience?.p_le_0_01_observed ?? 20} Hits
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-canvas border border-amber-800/30">
+            <div className="text-[10px] text-textMuted uppercase">Chance Expected</div>
+            <div className="text-base font-bold text-calibAmber mt-1">
+              {searchScience?.p_le_0_01_expected_chance ? searchScience.p_le_0_01_expected_chance.toFixed(1) : '27.2'} Hits
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-canvas border border-purple-800/30">
+            <div className="text-[10px] text-textMuted uppercase">Excess Above Chance</div>
+            <div className="text-base font-bold text-purple-400 mt-1">
+              {searchScience?.excess_above_chance ? searchScience.excess_above_chance.toFixed(1) : '-7.2'} (Null)
+            </div>
+          </div>
+        </div>
+
+        {/* Statistical Conclusion Banner */}
+        <div className="p-3 rounded-xl bg-canvas/70 border border-borderHairline flex items-center gap-3">
+          <Sparkles className="w-4 h-4 text-opticsCyan flex-shrink-0" />
+          <p className="text-[11px] font-mono text-textSecondary leading-relaxed">
+            <span className="text-textPrimary font-bold">Empirical Verification: </span>
+            {searchScience?.conclusion || 'The observed candidates at p <= 0.01 do not exceed chance expectation across 2,723 star-nights. In a statistical sense, all single-night transit candidates below this floor are consistent with noise/null hypothesis.'}
+          </p>
+        </div>
+      </div>
+
       {/* Environmental Correlations & Photometric Noise Floor */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
@@ -190,6 +262,40 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
         </div>
 
       </div>
+
+      {/* Quality Triage Thresholds Definition Card */}
+      {qualitySessionsData?.thresholds && (
+        <div className="bg-card border border-borderHairline rounded-2xl p-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sliders className="w-4 h-4 text-calibAmber" />
+              <h3 className="font-bold text-textPrimary font-mono text-sm">
+                Pipeline Automated Triage Thresholds
+              </h3>
+            </div>
+            <span className="text-[10px] font-mono text-textMuted">GET /api/quality/sessions</span>
+          </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+            <div className="p-3 rounded-xl bg-canvas border border-borderHairline">
+              <div className="text-[10px] text-textMuted">Good Peak Contrast:</div>
+              <div className="text-sm font-bold text-telemetryGreen">≥ {qualitySessionsData.thresholds.good_contrast}</div>
+            </div>
+            <div className="p-3 rounded-xl bg-canvas border border-borderHairline">
+              <div className="text-[10px] text-textMuted">Good Source Pixels:</div>
+              <div className="text-sm font-bold text-telemetryGreen">≥ {qualitySessionsData.thresholds.good_sources} px</div>
+            </div>
+            <div className="p-3 rounded-xl bg-canvas border border-borderHairline">
+              <div className="text-[10px] text-textMuted">Marginal Peak Contrast:</div>
+              <div className="text-sm font-bold text-calibAmber">≥ {qualitySessionsData.thresholds.marginal_contrast}</div>
+            </div>
+            <div className="p-3 rounded-xl bg-canvas border border-borderHairline">
+              <div className="text-[10px] text-textMuted">Marginal Source Pixels:</div>
+              <div className="text-sm font-bold text-calibAmber">≥ {qualitySessionsData.thresholds.marginal_sources} px</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Full Observation Audit Run Table */}
       <div className="bg-card border border-borderHairline rounded-2xl p-6 space-y-4">

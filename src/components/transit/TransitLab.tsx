@@ -8,7 +8,8 @@ import {
   PhaseFoldPoint,
   EphemerisRow,
   MeasuredDepthRow,
-  PlanetDetailResponse
+  PlanetDetailResponse,
+  ExplainResponse
 } from '../../types';
 import { apiService } from '../../services/api';
 import { isSameTarget, safeFixed } from '../../utils/targetUtils';
@@ -23,7 +24,13 @@ import {
   Zap, 
   SlidersHorizontal,
   Compass,
-  AlertTriangle
+  AlertTriangle,
+  Sparkles,
+  Globe,
+  BookOpen,
+  Bot,
+  RefreshCw,
+  Cpu
 } from 'lucide-react';
 
 interface TransitLabProps {
@@ -58,6 +65,35 @@ export const TransitLab: React.FC<TransitLabProps> = ({
 
   // Live /api/planets/{target} state
   const [planetPhysics, setPlanetPhysics] = useState<PlanetDetailResponse | null>(null);
+
+  // AI Explainer State (Gemini 2.5 Flash grounded in pipeline metrics)
+  const [explainData, setExplainData] = useState<ExplainResponse | null>(null);
+  const [isExplaining, setIsExplaining] = useState(false);
+  const [explainLanguage, setExplainLanguage] = useState<'ar' | 'en'>('ar');
+  const [explainAudience, setExplainAudience] = useState<'student' | 'astrophysicist'>('student');
+  const [explainError, setExplainError] = useState<string | null>(null);
+
+  const handleExplainSession = async (lang = explainLanguage, aud = explainAudience) => {
+    if (!selectedSession?.session_id) return;
+    setIsExplaining(true);
+    setExplainError(null);
+    try {
+      const res = await apiService.explainSession(selectedSession.session_id, lang, aud);
+      if (res) {
+        setExplainData(res);
+      }
+    } catch (err: any) {
+      console.warn('Failed to explain session:', err);
+      setExplainError(err?.message || 'Failed to reach AI pipeline explainer');
+    } finally {
+      setIsExplaining(false);
+    }
+  };
+
+  useEffect(() => {
+    setExplainData(null);
+    setExplainError(null);
+  }, [selectedSession]);
 
   // Fetch target physics from /api/planets/{target}
   useEffect(() => {
@@ -903,6 +939,212 @@ export const TransitLab: React.FC<TransitLabProps> = ({
           </div>
 
         </div>
+
+      </div>
+
+      {/* Gemini 2.5 Flash Autonomous Session Explainer */}
+      <div className="bg-gradient-to-br from-card via-card to-purple-950/20 border border-purple-800/30 rounded-2xl p-6 space-y-5 relative overflow-hidden shadow-xl shadow-purple-950/10">
+        
+        {/* Glow Accent */}
+        <div className="absolute top-0 right-0 w-72 h-72 bg-purple-600/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+
+        {/* Section Header */}
+        <div className="flex items-center justify-between flex-wrap gap-4 relative z-10">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-purple-950/60 border border-purple-700/50 text-purple-300">
+              <Bot className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-textPrimary font-mono text-base">
+                  Gemini 2.5 Flash Scientific Session Explainer
+                </h3>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-purple-900/60 text-purple-300 border border-purple-700/40 font-semibold">
+                  Live LLM Pipeline
+                </span>
+              </div>
+              <p className="text-xs text-textSecondary mt-0.5 font-sans">
+                Real-time exoplanetary transit physics inference grounded strictly in calibrated photometry telemetry
+              </p>
+            </div>
+          </div>
+
+          {/* Controls: Language Toggle & Audience Selector */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Language Toggle */}
+            <div className="flex items-center bg-canvas p-1 rounded-xl border border-borderHairline text-xs font-mono">
+              <button
+                onClick={() => {
+                  setExplainLanguage('ar');
+                  if (explainData) handleExplainSession('ar', explainAudience);
+                }}
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-medium ${
+                  explainLanguage === 'ar'
+                    ? 'bg-purple-900/80 text-white font-bold border border-purple-600/50 shadow-sm'
+                    : 'text-textSecondary hover:text-textPrimary'
+                }`}
+              >
+                🇸🇦 العربية
+              </button>
+              <button
+                onClick={() => {
+                  setExplainLanguage('en');
+                  if (explainData) handleExplainSession('en', explainAudience);
+                }}
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-medium ${
+                  explainLanguage === 'en'
+                    ? 'bg-purple-900/80 text-white font-bold border border-purple-600/50 shadow-sm'
+                    : 'text-textSecondary hover:text-textPrimary'
+                }`}
+              >
+                🇬🇧 English
+              </button>
+            </div>
+
+            {/* Audience Selector */}
+            <div className="flex items-center bg-canvas p-1 rounded-xl border border-borderHairline text-xs font-mono">
+              <button
+                onClick={() => {
+                  setExplainAudience('student');
+                  if (explainData) handleExplainSession(explainLanguage, 'student');
+                }}
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                  explainAudience === 'student'
+                    ? 'bg-borderHairline text-white font-bold'
+                    : 'text-textSecondary hover:text-textPrimary'
+                }`}
+              >
+                Student Level
+              </button>
+              <button
+                onClick={() => {
+                  setExplainAudience('astrophysicist');
+                  if (explainData) handleExplainSession(explainLanguage, 'astrophysicist');
+                }}
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                  explainAudience === 'astrophysicist'
+                    ? 'bg-borderHairline text-white font-bold'
+                    : 'text-textSecondary hover:text-textPrimary'
+                }`}
+              >
+                Astrophysicist
+              </button>
+            </div>
+
+            {/* Trigger Button */}
+            <button
+              onClick={() => handleExplainSession(explainLanguage, explainAudience)}
+              disabled={isExplaining}
+              className={`px-4 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer shadow-lg ${
+                isExplaining
+                  ? 'bg-purple-950 border border-purple-800 text-purple-300 opacity-80 cursor-wait'
+                  : 'bg-purple-600 hover:bg-purple-500 text-white shadow-purple-900/30 active:scale-95'
+              }`}
+            >
+              {isExplaining ? (
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <span>Synthesizing Telemetry...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>{explainData ? 'Re-Analyze Session' : 'Run AI Scientific Analysis'}</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Error message */}
+        {explainError && (
+          <div className="p-3.5 rounded-xl bg-rose-950/40 border border-rose-800/40 text-rose-300 text-xs font-mono flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0 text-alertRose" />
+            <span>AI Pipeline Notice: {explainError}</span>
+          </div>
+        )}
+
+        {/* AI Output Content */}
+        {explainData ? (
+          <div className="space-y-4 pt-2 relative z-10">
+            {/* Live Grounded Metrics Strip */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
+              <div className="p-3.5 rounded-xl bg-canvas/80 border border-borderHairline">
+                <div className="text-[10px] text-textMuted uppercase">Physics Verdict</div>
+                <div className="text-sm font-bold text-opticsCyan mt-1 truncate">
+                  {explainData.verdict}
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-canvas/80 border border-borderHairline">
+                <div className="text-[10px] text-textMuted uppercase">Detection Significance</div>
+                <div className="text-sm font-bold text-telemetryGreen mt-1">
+                  {safeFixed(explainData.significance_sigma, 1)} σ
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-canvas/80 border border-borderHairline">
+                <div className="text-[10px] text-textMuted uppercase">Out-of-Transit RMS</div>
+                <div className="text-sm font-bold text-textPrimary mt-1">
+                  {safeFixed(explainData.out_of_transit_rms_ppt, 1)} ppt
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-canvas/80 border border-borderHairline">
+                <div className="text-[10px] text-textMuted uppercase">Field 95% Limit</div>
+                <div className="text-sm font-bold text-calibAmber mt-1">
+                  {safeFixed(explainData.field_sigma_95, 1)} ppt
+                </div>
+              </div>
+            </div>
+
+            {/* Detailed AI Explanation Text */}
+            <div className={`p-4 rounded-xl bg-canvas/90 border border-purple-800/30 text-xs leading-relaxed space-y-3 ${
+              explainLanguage === 'ar' ? 'font-sans text-right dir-rtl' : 'font-sans text-left'
+            }`} dir={explainLanguage === 'ar' ? 'rtl' : 'ltr'}>
+              <div className="flex items-center gap-2 text-purple-400 font-mono text-[11px] font-bold border-b border-borderHairline/60 pb-2">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{explainLanguage === 'ar' ? 'التقرير الفيزيائي المستخلص بالذكاء الاصطناعي:' : 'Grounded Scientific Narrative:'}</span>
+              </div>
+              <p className="text-textPrimary whitespace-pre-line text-[13px] leading-relaxed">
+                {explainData.explanation}
+              </p>
+            </div>
+
+            {/* Scientific Limitations & Boundaries */}
+            {explainData.limitations && explainData.limitations.length > 0 && (
+              <div className="p-3.5 rounded-xl bg-canvas/50 border border-borderHairline space-y-2">
+                <div className="flex items-center gap-2 text-[11px] font-mono text-calibAmber font-semibold">
+                  <Info className="w-3.5 h-3.5" />
+                  <span>{explainLanguage === 'ar' ? 'الحدود العلمية والمحاذير الفلكية:' : 'Scientific Limitations & Observation Boundaries:'}</span>
+                </div>
+                <ul className="list-disc list-inside space-y-1 text-xs text-textSecondary font-sans">
+                  {explainData.limitations.map((lim, idx) => (
+                    <li key={idx} className="leading-relaxed">
+                      {lim}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Footer Provenance */}
+            <div className="flex items-center justify-between text-[11px] font-mono text-textMuted pt-1 border-t border-borderHairline/40">
+              <span>Model: {explainData.model || 'Gemini 2.5 Flash'} · Grounded on telemetry for session {selectedSession?.session_id}</span>
+              <span className="text-purple-400">Endpoint: POST /api/explain</span>
+            </div>
+          </div>
+        ) : !isExplaining ? (
+          <div className="py-8 px-4 rounded-xl bg-canvas/40 border border-dashed border-borderHairline text-center space-y-2 relative z-10">
+            <Bot className="w-8 h-8 text-purple-400/60 mx-auto" />
+            <div className="text-xs font-mono text-textPrimary font-semibold">
+              Ready to generate AI exoplanetary transit explanation
+            </div>
+            <p className="text-[11px] text-textSecondary font-sans max-w-lg mx-auto">
+              Click &quot;Run AI Scientific Analysis&quot; above to process the differential light curve of <span className="text-opticsCyan font-mono">{selectedSession?.session_id}</span> through Gemini 2.5 Flash. Fully bilingual in Arabic and English.
+            </p>
+          </div>
+        ) : null}
 
       </div>
 

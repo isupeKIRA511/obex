@@ -79,7 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside 
-      className={`h-fit self-start sticky top-18 z-40 flex flex-col bg-canvasSubtle/95 backdrop-blur-md rounded-br-2xl border-r border-b border-borderHairline transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden shrink-0 ${
+      className={`h-fit self-start sticky top-18 z-40 flex flex-col bg-canvasSubtle/95 backdrop-blur-md rounded-br-2xl border-r border-b border-borderHairline transition-[width,opacity,transform,padding] duration-400 ease-in-out overflow-hidden shrink-0 ${
         isOpen 
           ? 'w-76 opacity-100 translate-x-0 p-4 shadow-2xl shadow-black/50' 
           : 'w-0 opacity-0 -translate-x-full p-0 border-r-0 border-b-0 pointer-events-none'

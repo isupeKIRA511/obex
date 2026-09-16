@@ -545,4 +545,105 @@ export interface MissionCalculation {
   kineticEnergyJoulesPerKg: number;
 }
 
+export interface HealthResponse {
+  status: string;
+  version: string;
+  team: string;
+  challenge: string;
+  data_dir: string;
+  results_present: number;
+  results_missing: string[];
+  images_available: boolean;
+  ai_enabled: boolean;
+  timing: {
+    barycentric_correction_applied: boolean;
+    time_scale: string;
+  };
+}
+
+export interface SearchRow {
+  target: string;
+  session_id: string;
+  night: string;
+  track_id: number;
+  period_days: number;
+  epoch: number;
+  depth_pct: number;
+  depth_err_pct: number;
+  significance_sigma: number;
+  p_value: number;
+  p_le_0_01: boolean;
+  score: number;
+  is_target_star: boolean;
+}
+
+export interface SearchResponse {
+  n_star_nights_searched: number;
+  n_hits: number;
+  n_expected_by_chance: number;
+  verdict: string;
+  rows: SearchRow[];
+}
+
+export interface QualitySessionRow {
+  session_id: string;
+  target: string;
+  n_frames: number;
+  median_contrast: number;
+  median_sources: number;
+  min_sources: number;
+  median_sky: number;
+  max_sky: number;
+  median_sky_sigma: number;
+  median_weather: number;
+  median_airmass: number;
+  quality: 'good' | 'marginal' | 'unusable';
+  sky_swing: number;
+}
+
+export interface QualitySessionsResponse {
+  thresholds: {
+    good_contrast: number;
+    good_sources: number;
+    marginal_contrast: number;
+  };
+  counts: {
+    good: number;
+    unusable: number;
+    marginal: number;
+  };
+  rows: QualitySessionRow[];
+}
+
+export interface DarkMasterItem {
+  camtemp_K: number;
+  n_darks: number;
+  master_median: number;
+}
+
+export interface ModelMetricsResponse {
+  generated_utc: string;
+  classes: string[];
+  n_cutouts: number;
+  split: {
+    strategy: string;
+    train_sessions: string[];
+    val_sessions: string[];
+    test_sessions: string[];
+  };
+  test_metrics: {
+    accuracy: number;
+    macro_f1: number;
+    weighted_f1: number;
+    per_class: Record<string, {
+      precision: number;
+      recall: number;
+      f1: number;
+      support: number;
+    }>;
+  };
+  baselines: Record<string, number>;
+}
+
+
 
