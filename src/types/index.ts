@@ -466,11 +466,17 @@ export interface PlanetDetailResponse {
 // --- Live OpenAPI /api/explain (Gemini 2.5 Flash) Definitions ---
 export interface ExplainResponse {
   session_id: string;
-  language: string;
-  audience: string;
-  text: string;
-  model_name: string;
-  grounded_on: any;
+  language?: string;
+  audience?: string;
+  verdict: string;
+  out_of_transit_rms_ppt: number;
+  significance_sigma: number;
+  field_sigma_95: number;
+  limitations: string[];
+  explanation: string;
+  model?: string;
+  raw_text?: string;
+  grounded_on?: any;
 }
 
 // --- NASA Exoplanet Archive & Habitable Zone Hub Definitions ---

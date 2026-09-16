@@ -243,7 +243,30 @@ export const apiService = {
         body: JSON.stringify({ session_id: sessionId, language, audience })
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-      return await res.json();
+      const raw = await res.json();
+      
+      const limitations: string[] = [];
+      if (raw.grounded_on?.limitation) {
+        if (Array.isArray(raw.grounded_on.limitation)) {
+          limitations.push(...raw.grounded_on.limitation);
+        } else {
+          limitations.push(raw.grounded_on.limitation);
+        }
+      }
+
+      return {
+        session_id: raw.session_id || sessionId,
+        language: raw.language || language,
+        audience: raw.audience || audience,
+        verdict: raw.verdict || raw.grounded_on?.verdict || 'ANALYSIS COMPLETE',
+        out_of_transit_rms_ppt: raw.out_of_transit_rms_ppt ?? raw.grounded_on?.depth?.out_of_transit_rms_ppt ?? raw.grounded_on?.photometry?.rms_ppt ?? 0,
+        significance_sigma: raw.significance_sigma ?? raw.grounded_on?.depth?.significance_sigma ?? 0,
+        field_sigma_95: raw.field_sigma_95 ?? raw.grounded_on?.field_context?.field_sigma_95 ?? 0,
+        limitations: raw.limitations || limitations,
+        explanation: raw.explanation || raw.text || '',
+        model: raw.model_name || raw.model || 'google/gemini-2.5-flash',
+        grounded_on: raw.grounded_on
+      };
     } catch (err) {
       console.warn(`[API] Explain request failed for session ${sessionId}:`, err);
       return null;
