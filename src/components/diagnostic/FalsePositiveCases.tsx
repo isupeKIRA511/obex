@@ -376,7 +376,7 @@ export const FalsePositiveCases: React.FC<FalsePositiveCasesProps> = ({ cases })
                         </span>
                       </td>
                       <td className="p-3 text-textSecondary">
-                        {cls.support.toLocaleString()} cutouts
+                        {(cls.support ?? (cls as any).n_samples ?? 0).toLocaleString()} cutouts
                       </td>
                       <td className="p-3 text-textMuted text-[11px] font-sans">
                         {descMap[cls.class_name] || 'Physical discrimination'}

@@ -193,11 +193,11 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               {onExploreHub && (
                 <button
                   onClick={onExploreHub}
-                  className="px-4 py-2.5 rounded-full bg-canvas border border-borderHairline hover:border-emerald-500 text-textSecondary hover:text-white text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+                  className="px-4 py-2.5 rounded-xl bg-canvas border border-borderHairline hover:border-emerald-500 text-textSecondary hover:text-white text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
                   <span>NASA Exoplanet Hub</span>
@@ -207,7 +207,7 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
               {onExplorePhysics && (
                 <button
                   onClick={onExplorePhysics}
-                  className="px-4 py-2.5 rounded-full bg-canvas border border-borderHairline hover:border-opticsCyan text-textSecondary hover:text-white text-xs font-mono flex items-center gap-1.5 transition-all"
+                  className="px-4 py-2.5 rounded-xl bg-canvas border border-borderHairline hover:border-opticsCyan text-textSecondary hover:text-white text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   <Scale className="w-3.5 h-3.5 text-opticsCyan" />
                   <span>Kepler Validation</span>
@@ -216,10 +216,10 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
 
               <button
                 onClick={onExploreTransit}
-                className="px-5 py-2.5 rounded-full bg-aerospaceBlue hover:bg-aerospaceBlueHover text-white text-xs font-medium flex items-center gap-2 transition-all group-hover:gap-3"
+                className="px-5 py-2.5 rounded-xl bg-aerospaceBlue hover:bg-aerospaceBlueHover border border-blue-400/30 hover:border-opticsCyan text-white text-xs font-mono font-medium flex items-center gap-2 transition-all group-hover:gap-3 cursor-pointer shadow-lg shadow-blue-600/15"
               >
                 <span>Inspect Transit Light Curve</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 text-opticsCyan" />
               </button>
             </div>
           </div>

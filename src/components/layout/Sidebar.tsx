@@ -63,6 +63,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: BarChart2
     },
     {
+      id: 'diagnostic',
+      label: 'Diagnostic Matrix',
+      sublabel: '11 False Positives & CNN',
+      icon: ShieldCheck
+    },
+    {
       id: 'exoplanethub',
       label: 'NASA Exoplanet Hub',
       sublabel: 'TAP Archive, HZ & Mission',

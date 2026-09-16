@@ -42,10 +42,10 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="flex items-center gap-3">
         <button
           onClick={() => generateExoplanetPDF({ selectedTarget, selectedSession })}
-          className="px-4 py-2 rounded-full bg-aerospaceBlue hover:bg-aerospaceBlueHover text-white text-xs font-medium flex items-center gap-2 shadow-lg shadow-blue-600/10 transition-all active:scale-95 cursor-pointer"
+          className="px-4 py-2.5 rounded-xl bg-aerospaceBlue hover:bg-aerospaceBlueHover border border-blue-400/30 hover:border-opticsCyan text-white text-xs font-mono font-medium flex items-center gap-2 shadow-lg shadow-blue-600/15 transition-all duration-200 active:scale-95 cursor-pointer"
           title={`Export PDF Dossier for ${selectedTarget?.target || 'Active Exoplanet'}`}
         >
-          <Download className="w-3.5 h-3.5" />
+          <Download className="w-3.5 h-3.5 text-opticsCyan" />
           <span className="hidden sm:inline">Export {selectedTarget?.target || 'Planet'} PDF Dossier</span>
           <span className="sm:hidden">PDF</span>
         </button>
