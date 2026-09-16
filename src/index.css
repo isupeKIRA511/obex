@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #000000;
+    color: #FFFFFF;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #1C1C1C;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2D2D2D;
+}
+
+/* Monospace labels */
+.font-mono-num {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}

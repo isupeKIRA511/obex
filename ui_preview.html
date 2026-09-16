@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExoTransit Discovery Lab • UI/UX Preview Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            canvas: '#0B0F17',
+            surface: '#111827',
+            borderSubtle: '#1E293B',
+            accentSky: '#38BDF8',
+            accentScience: '#3B82F6',
+            accentCalib: '#F59E0B',
+            accentSuccess: '#10B981',
+            accentRose: '#F43F5E',
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Menlo', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #0B0F17; color: #F8FAFC; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0B0F17; }
+    ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased text-sm">
+
+  <!-- Top App Navigation -->
+  <header class="h-16 border-b border-borderSubtle bg-surface/90 backdrop-blur px-6 flex items-center justify-between sticky top-0 z-40">
+    <div class="flex items-center gap-4">
+      <div class="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-accentSky">
+        <i class="fa-solid fa-satellite-dish text-lg"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-base tracking-tight text-white">ExoTransit Discovery Lab</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-950/60 text-sky-400 border border-sky-800/40">Hack4Dev 2026</span>
+        </div>
+        <p class="text-xs text-slate-400">MicroObservatory Transit Follow-up • Whipple Obs, Arizona</p>
+      </div>
+    </div>
+
+    <!-- Center Status Pill -->
+    <div class="hidden lg:flex items-center gap-3 px-4 py-1.5 rounded-full bg-slate-900 border border-borderSubtle text-xs">
+      <span class="flex items-center gap-1.5 text-emerald-400 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        API Online
+      </span>
+      <span class="text-slate-600">|</span>
+      <span class="text-slate-300 font-mono">1,741 FITS Ingested</span>
+      <span class="text-slate-600">|</span>
+      <span class="text-slate-400">22 Sessions Triage</span>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-3">
+      <div class="text-right hidden sm:block font-mono text-xs text-slate-400">
+        <div class="text-slate-200">01:13:30 UTC</div>
+        <div class="text-[10px] text-slate-500">Live Campaign Clock</div>
+      </div>
+      <a href="Exoplanet_Data_Analysis_Report.pdf" target="_blank" class="px-3.5 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-medium text-xs flex items-center gap-2 transition">
+        <i class="fa-solid fa-file-pdf"></i>
+        <span>Analysis Report</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Body Layout -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- Left Control Sidebar -->
+    <aside class="w-72 border-r border-borderSubtle bg-surface flex flex-col p-4 gap-5 overflow-y-auto">
+      <div>
+        <label class="text-xs font-semibold text-slate-300 mb-2 block uppercase tracking-wider">Search & Target</label>
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+          <input type="text" placeholder="Search target or file..." class="w-full bg-slate-950 border border-borderSubtle rounded-lg pl-8 pr-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-accentSky">
+        </div>
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-slate-300 mb-1.5 block">Planetary System (Target)</label>
+        <select id="targetSelect" class="w-full bg-slate-950 border border-borderSubtle rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-accentSky">
+          <option value="TRES-5" selected>TrES-5 (6 Good Sessions • 427 Frames)</option>
+          <option value="TRES-1">TrES-1 (V=11.79 • 1 Session)</option>
+          <option value="TRES-3">TrES-3 (V=12.40 • 4 Sessions)</option>
+          <option value="WASP-10">WASP-10 (V=12.70 • 1 Session)</option>
+          <option value="WASP-2">WASP-2 (V=11.98 • 2 Sessions)</option>
+          <option value="Qatar-1">Qatar-1 (V=12.84 • 3 Sessions)</option>
+          <option value="CoRoT-2">CoRoT-2 (V=12.57 • 3 Sessions)</option>
+          <option value="HAT-P-10">HAT-P-10 (V=11.89 • 2 Sessions)</option>
+          <option value="Dark-C-">Dark-C- (Calibration • 60 Frames)</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-slate-300 mb-1.5 block">Observation Session</label>
+        <select class="w-full bg-slate-950 border border-borderSubtle rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-accentSky">
+          <option>TRES-5__2026-08-20 (87 Frames • Good)</option>
+          <option>TRES-5__2026-08-26 (91 Frames • Good)</option>
+          <option>TRES-5__2026-08-29 (93 Frames • Good)</option>
+          <option>TRES-5__2026-09-01 (88 Frames • Good)</option>
+          <option>TRES-5__2026-09-04 (82 Frames • Good)</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold text-slate-300 mb-1.5 block">Frame Type Filter</label>
+        <div class="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-lg border border-borderSubtle text-center text-xs">
+          <button class="py-1.5 rounded bg-surface text-accentSky font-medium">All</button>
+          <button class="py-1.5 rounded text-slate-400 hover:text-white">Science</button>
+          <button class="py-1.5 rounded text-slate-400 hover:text-white">Dark</button>
+        </div>
+      </div>
+
+      <div class="mt-auto p-3 rounded-lg bg-slate-950/70 border border-borderSubtle text-xs space-y-1">
+        <div class="flex justify-between text-slate-400">
+          <span>Active Selection:</span>
+          <span class="text-emerald-400 font-medium">Verified Usable</span>
+        </div>
+        <div class="flex justify-between text-slate-400">
+          <span>Header EXPTIME:</span>
+          <span class="text-white font-mono">60.0s Corrected</span>
+        </div>
+        <div class="flex justify-between text-slate-400">
+          <span>Mount Drift:</span>
+          <span class="text-sky-400 font-mono">~105 px Alt-Az</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col overflow-y-auto bg-canvas p-6 gap-6">
+
+      <!-- Executive KPI Strip -->
+      <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div class="bg-surface border border-borderSubtle p-3.5 rounded-xl">
+          <div class="text-[11px] text-slate-400 font-medium mb-1">Total Frames</div>
+          <div class="text-2xl font-bold font-mono text-white">1,741</div>
+          <div class="text-[10px] text-emerald-400 mt-1">100% Ingested</div>
+        </div>
+
+        <div class="bg-surface border border-borderSubtle p-3.5 rounded-xl">
+          <div class="text-[11px] text-slate-400 font-medium mb-1">Science / Dark</div>
+          <div class="text-2xl font-bold font-mono text-sky-400">96.5%</div>
+          <div class="w-full bg-slate-800 h-1 rounded-full mt-2 overflow-hidden flex">
+            <div class="bg-sky-500 h-full" style="width: 96.5%"></div>
+            <div class="bg-amber-500 h-full" style="width: 3.5%"></div>
+          </div>
+        </div>
+
+        <div class="bg-surface border border-borderSubtle p-3.5 rounded-xl">
+          <div class="text-[11px] text-slate-400 font-medium mb-1">Mean Cadence</div>
+          <div class="text-2xl font-bold font-mono text-white">2.85<span class="text-xs text-slate-400 font-sans"> min</span></div>
+          <div class="text-[10px] text-slate-400 mt-1">±0.12 min Jitter</div>
+        </div>
+
+        <div class="bg-surface border border-borderSubtle p-3.5 rounded-xl">
+          <div class="text-[11px] text-slate-400 font-medium mb-1">Session Triage</div>
+          <div class="text-2xl font-bold font-mono text-emerald-400">15 / 22</div>
+          <div class="text-[10px] text-slate-400 mt-1">6 Kept Controls</div>
+        </div>
+
+        <div class="bg-surface border border-borderSubtle p-3.5 rounded-xl">
+          <div class="text-[11px] text-slate-400 font-medium mb-1">Known Targets</div>
+          <div class="text-2xl font-bold font-mono text-white">8<span class="text-xs text-slate-400 font-sans"> Hosts</span></div>
+          <div class="text-[10px] text-sky-400 mt-1">Hot Jupiters</div>
+        </div>
+
+        <div class="bg-surface border border-borderSubtle p-3.5 rounded-xl">
+          <div class="text-[11px] text-slate-400 font-medium mb-1">Data Loss</div>
+          <div class="text-2xl font-bold font-mono text-emerald-400">0.0%</div>
+          <div class="text-[10px] text-emerald-400 mt-1">Zero Network Drops</div>
+        </div>
+      </section>
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center justify-between border-b border-borderSubtle">
+        <div class="flex gap-2">
+          <button onclick="switchTab('transit')" id="tab-transit" class="px-4 py-2.5 text-xs font-semibold border-b-2 border-accentSky text-accentSky flex items-center gap-2">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Transit Discovery Lab</span>
+          </button>
+          <button onclick="switchTab('fits')" id="tab-fits" class="px-4 py-2.5 text-xs font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-images"></i>
+            <span>FITS & Calibration Hub</span>
+          </button>
+          <button onclick="switchTab('fp')" id="tab-fp" class="px-4 py-2.5 text-xs font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>False Positives & AI</span>
+          </button>
+          <button onclick="switchTab('3d')" id="tab-3d" class="px-4 py-2.5 text-xs font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-globe"></i>
+            <span>3D Solar System & NASA</span>
+          </button>
+        </div>
+
+        <div class="text-xs text-slate-400 font-mono hidden md:block">
+          Pipeline: EXOTIC / Mandel-Agol Model
+        </div>
+      </div>
+
+      <!-- TAB 1: Transit Discovery Lab Content -->
+      <div id="content-transit" class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          
+          <!-- Main Chart Container (3 Cols) -->
+          <div class="lg:col-span-3 bg-surface border border-borderSubtle rounded-xl p-5 flex flex-col gap-4">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                  <span>Normalized Flux vs Time from Mid-Transit</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-950 text-sky-400 border border-sky-800">TrES-5 b</span>
+                </h2>
+                <p class="text-xs text-slate-400">Differential Photometry • Synchronized with Atmospheric Airmass Telemetry</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="px-2.5 py-1 bg-slate-900 border border-borderSubtle rounded text-xs text-slate-300 hover:text-white">Unfolded (Night)</button>
+                <button class="px-2.5 py-1 bg-sky-950 border border-sky-800 text-accentSky rounded text-xs font-medium">Phase-Folded (All Nights)</button>
+              </div>
+            </div>
+
+            <!-- Light Curve Visual Canvas -->
+            <div class="relative bg-slate-950 border border-borderSubtle rounded-lg p-3 h-80 flex flex-col justify-between overflow-hidden">
+              <img src="assets/nasa_transit_lightcurve_tres5.png" alt="Transit Light Curve" class="w-full h-full object-contain">
+            </div>
+
+            <!-- Telemetry Synchronization Legend -->
+            <div class="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-borderSubtle">
+              <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> Raw Photometry (60s exp)</span>
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-white"></span> 5-min Binned Flux</span>
+                <span class="flex items-center gap-1.5"><span class="w-4 h-0.5 bg-accentSky"></span> Mandel & Agol Fit</span>
+              </div>
+              <div class="font-mono text-emerald-400">
+                <i class="fa-solid fa-check mr-1"></i> Airmass slope decorrelated
+              </div>
+            </div>
+          </div>
+
+          <!-- Parameter Summary Card (1 Col) -->
+          <div class="bg-surface border border-borderSubtle rounded-xl p-5 flex flex-col gap-4">
+            <h3 class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center justify-between">
+              <span>Target Parameters</span>
+              <span class="text-accentSky font-mono">TrES-5 b</span>
+            </h3>
+
+            <div class="space-y-3 font-mono text-xs">
+              <div class="p-2.5 rounded-lg bg-slate-950 border border-borderSubtle">
+                <div class="text-[10px] text-slate-400 font-sans">Transit Depth (ΔF)</div>
+                <div class="text-base font-bold text-white">2.10% <span class="text-xs text-slate-400 font-normal">± 0.08%</span></div>
+              </div>
+
+              <div class="p-2.5 rounded-lg bg-slate-950 border border-borderSubtle">
+                <div class="text-[10px] text-slate-400 font-sans">Planet Radius Ratio (Rp/R*)</div>
+                <div class="text-base font-bold text-accentSky">0.1449</div>
+              </div>
+
+              <div class="p-2.5 rounded-lg bg-slate-950 border border-borderSubtle">
+                <div class="text-[10px] text-slate-400 font-sans">Orbital Period (P)</div>
+                <div class="text-base font-bold text-white">1.4822 <span class="text-xs text-slate-400 font-normal">days</span></div>
+              </div>
+
+              <div class="p-2.5 rounded-lg bg-slate-950 border border-borderSubtle">
+                <div class="text-[10px] text-slate-400 font-sans">Total Duration (T14)</div>
+                <div class="text-base font-bold text-white">1.82 <span class="text-xs text-slate-400 font-normal">hours</span></div>
+              </div>
+
+              <div class="p-2.5 rounded-lg bg-slate-950 border border-borderSubtle">
+                <div class="text-[10px] text-slate-400 font-sans">Host Star Magnitude</div>
+                <div class="text-base font-bold text-white">V = 13.72 <span class="text-xs text-slate-400 font-normal">(G-type)</span></div>
+              </div>
+            </div>
+
+            <div class="mt-auto">
+              <a href="https://exoplanetarchive.ipac.caltech.edu/overview/TrES-5" target="_blank" class="w-full py-2 bg-slate-900 hover:bg-slate-800 border border-borderSubtle text-slate-300 hover:text-white rounded-lg text-xs font-medium flex items-center justify-center gap-2 transition">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <span>NASA Archive Record</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comparative Multi-Target Gallery Preview -->
+        <div class="bg-surface border border-borderSubtle rounded-xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-bold text-white">8-Target Survey Light Curve Gallery</h3>
+              <p class="text-xs text-slate-400">Standardized Transit Depth Comparisons across all dataset targets</p>
+            </div>
+            <span class="text-xs text-slate-400 font-mono">All 8 Systems Verified</span>
+          </div>
+          <div class="rounded-lg overflow-hidden border border-borderSubtle bg-slate-950 p-2">
+            <img src="assets/nasa_transit_comparative_gallery.png" alt="Exoplanet Gallery" class="w-full h-auto max-h-96 object-contain">
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: FITS & Calibration Hub -->
+      <div id="content-fits" class="space-y-6 hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-surface border border-borderSubtle rounded-xl p-5 flex flex-col gap-4">
+            <h3 class="text-sm font-bold text-white flex items-center justify-between">
+              <span>Calibrated CCD Field of View (FOV)</span>
+              <span class="text-xs font-mono text-accentSky">Target & Comparison Stars</span>
+            </h3>
+            <div class="bg-slate-950 border border-borderSubtle rounded-lg p-2 h-96 flex items-center justify-center">
+              <img src="assets/nasa_fov_apertures.png" alt="Aperture Photometry" class="max-h-full object-contain">
+            </div>
+          </div>
+
+          <div class="bg-surface border border-borderSubtle rounded-xl p-5 flex flex-col gap-4">
+            <h3 class="text-sm font-bold text-white flex items-center justify-between">
+              <span>Master Dark Thermal Calibration Impact</span>
+              <span class="text-xs font-mono text-emerald-400">Zero Baseline Restored</span>
+            </h3>
+            <div class="bg-slate-950 border border-borderSubtle rounded-lg p-2 h-96 flex items-center justify-center">
+              <img src="assets/nasa_dark_calibration_profile.png" alt="Dark Calibration" class="max-h-full object-contain">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: False Positives & AI Audit -->
+      <div id="content-fp" class="space-y-6 hidden">
+        <div class="bg-surface border border-borderSubtle rounded-xl p-5">
+          <h3 class="text-sm font-bold text-white mb-1">Diagnostic Engine: 11 False Positive Cases</h3>
+          <p class="text-xs text-slate-400 mb-4">Every physical mechanism that can mimic a planetary transit and how our pipeline rules it out</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono text-xs">
+            <div class="p-3 bg-slate-950 border border-borderSubtle rounded-lg">
+              <div class="text-emerald-400 font-bold mb-1">Case 01: Telescope Tracking Slip</div>
+              <div class="text-[11px] text-slate-400">Ruled out via continuous frame-to-frame field motion tracking (< 105 px drift).</div>
+            </div>
+            <div class="p-3 bg-slate-950 border border-borderSubtle rounded-lg">
+              <div class="text-emerald-400 font-bold mb-1">Case 02: Airmass Extinction</div>
+              <div class="text-[11px] text-slate-400">Ruled out by simultaneous linear Airmass regression decorrelation.</div>
+            </div>
+            <div class="p-3 bg-slate-950 border border-borderSubtle rounded-lg">
+              <div class="text-amber-400 font-bold mb-1">Case 07: Blended Eclipsing Binary</div>
+              <div class="text-[11px] text-slate-400">Marked Untestable: 5 arcsec/px single Clear filter resolution limit.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: 3D Solar System & NASA -->
+      <div id="content-3d" class="space-y-6 hidden">
+        <div class="bg-surface border border-borderSubtle rounded-xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="text-sm font-bold text-white">Interactive 3D Celestial Suite</h3>
+              <p class="text-xs text-slate-400">Procedural WebGL Planetary Globe & Official NASA Simulation Integration</p>
+            </div>
+            <span class="text-xs text-accentSky font-mono">60 FPS Texture Engine</span>
+          </div>
+
+          <!-- 3D Mockup Display -->
+          <div class="bg-slate-950 border border-borderSubtle rounded-lg overflow-hidden flex justify-center p-2">
+            <img src="/Users/isupekira/.gemini/antigravity/brain/dbcac713-779a-47b0-bee6-ad3957faafcb/planet_3d_ui_mockup_1789535273980.jpg" alt="3D Planet Viewer" class="w-full max-h-[550px] object-contain rounded">
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      const tabs = ['transit', 'fits', 'fp', '3d'];
+      tabs.forEach(t => {
+        document.getElementById(`content-${t}`).classList.add('hidden');
+        document.getElementById(`tab-${t}`).classList.remove('border-accentSky', 'text-accentSky');
+        document.getElementById(`tab-${t}`).classList.add('border-transparent', 'text-slate-400');
+      });
+      document.getElementById(`content-${tab}`).classList.remove('hidden');
+      document.getElementById(`tab-${tab}`).classList.add('border-accentSky', 'text-accentSky');
+      document.getElementById(`tab-${tab}`).classList.remove('border-transparent', 'text-slate-400');
+    }
+  </script>
+</body>
+</html>
