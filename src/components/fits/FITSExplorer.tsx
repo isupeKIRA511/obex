@@ -267,12 +267,14 @@ export const FITSExplorer: React.FC<FITSExplorerProps> = ({
                       <td className="py-2.5 px-3 font-semibold text-textPrimary">
                         Frame #{f.frame_index}
                       </td>
-                      <td className="py-2.5 px-3 text-textSecondary">{f.t_utc.slice(11, 19)} UTC</td>
-                      <td className="py-2.5 px-3 text-opticsCyan">{f.airmass.toFixed(3)}</td>
-                      <td className="py-2.5 px-3 text-textSecondary">{f.TELALT.toFixed(1)}°</td>
-                      <td className="py-2.5 px-3 text-textSecondary">{f.sky_level} ADU</td>
-                      <td className="py-2.5 px-3 text-telemetryGreen">{f.peak_contrast.toFixed(1)}</td>
-                      <td className="py-2.5 px-3 text-textSecondary">{f.CAMTEMP} K</td>
+                      <td className="py-2.5 px-3 text-textSecondary">
+                        {f.t_utc ? (f.t_utc.length >= 19 ? f.t_utc.slice(11, 19) : f.t_utc) : '—'} UTC
+                      </td>
+                      <td className="py-2.5 px-3 text-opticsCyan">{safeFixed(f.airmass, 3)}</td>
+                      <td className="py-2.5 px-3 text-textSecondary">{safeFixed(f.TELALT, 1)}°</td>
+                      <td className="py-2.5 px-3 text-textSecondary">{f.sky_level ?? '—'} ADU</td>
+                      <td className="py-2.5 px-3 text-telemetryGreen">{safeFixed(f.peak_contrast, 1)}</td>
+                      <td className="py-2.5 px-3 text-textSecondary">{f.CAMTEMP ?? '—'} K</td>
                       <td className="py-2.5 px-3">
                         <button className="text-opticsCyan hover:underline text-[11px] flex items-center gap-1">
                           <Eye className="w-3 h-3" />

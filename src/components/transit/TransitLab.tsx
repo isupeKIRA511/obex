@@ -556,19 +556,19 @@ export const TransitLab: React.FC<TransitLabProps> = ({
                   <div className="absolute top-4 right-4 bg-black/90 border border-opticsCyan/60 rounded-xl p-3 text-xs font-mono shadow-2xl space-y-1 pointer-events-none z-30">
                     <div className="text-opticsCyan font-bold flex justify-between gap-4">
                       <span>Frame #{hoveredPoint.frame_index}</span>
-                      <span>{hoveredPoint.norm_flux.toFixed(4)} Flux</span>
+                      <span>{safeFixed(hoveredPoint.norm_flux, 4)} Flux</span>
                     </div>
                     <div className="text-textSecondary flex justify-between gap-4">
                       <span>Airmass (X):</span>
-                      <span className="text-white">{hoveredPoint.airmass.toFixed(3)}</span>
+                      <span className="text-white">{safeFixed(hoveredPoint.airmass, 3)}</span>
                     </div>
                     <div className="text-textSecondary flex justify-between gap-4">
                       <span>Sky Level:</span>
-                      <span className="text-white">{hoveredPoint.sky_level} ADU</span>
+                      <span className="text-white">{hoveredPoint.sky_level ?? '—'} ADU</span>
                     </div>
                     <div className="text-textSecondary flex justify-between gap-4">
                       <span>BJD:</span>
-                      <span className="text-white">{hoveredPoint.bjd_tdb.toFixed(5)}</span>
+                      <span className="text-white">{safeFixed(hoveredPoint.bjd_tdb, 5)}</span>
                     </div>
                   </div>
                 )}
@@ -721,20 +721,20 @@ export const TransitLab: React.FC<TransitLabProps> = ({
                 {hoveredPhasePoint && (
                   <div className="absolute top-4 right-4 bg-black/90 border border-purple-500/60 rounded-xl p-3 text-xs font-mono shadow-2xl space-y-1 pointer-events-none z-30">
                     <div className="text-purple-300 font-bold flex justify-between gap-4">
-                      <span>Phase: {hoveredPhasePoint.phase_hours.toFixed(2)}h</span>
-                      <span>{hoveredPhasePoint.flux.toFixed(4)} Flux</span>
+                      <span>Phase: {safeFixed(hoveredPhasePoint.phase_hours, 2)}h</span>
+                      <span>{safeFixed(hoveredPhasePoint.flux, 4)} Flux</span>
                     </div>
                     <div className="text-textSecondary flex justify-between gap-4">
                       <span>1-σ Uncertainty:</span>
-                      <span className="text-white">± {(hoveredPhasePoint.err * 1000).toFixed(1)} ppt</span>
+                      <span className="text-white">± {safeFixed((hoveredPhasePoint.err ?? 0) * 1000, 1)} ppt</span>
                     </div>
                     <div className="text-textSecondary flex justify-between gap-4">
                       <span>Pooled Nights:</span>
-                      <span className="text-white">{hoveredPhasePoint.n_nights} nights</span>
+                      <span className="text-white">{hoveredPhasePoint.n_nights ?? '—'} nights</span>
                     </div>
                     <div className="text-textSecondary flex justify-between gap-4">
                       <span>Exposures in Bin:</span>
-                      <span className="text-white">{hoveredPhasePoint.n} frames</span>
+                      <span className="text-white">{hoveredPhasePoint.n ?? '—'} frames</span>
                     </div>
                   </div>
                 )}

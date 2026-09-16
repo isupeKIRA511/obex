@@ -52,12 +52,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Layers
     },
     {
-      id: 'diagnostic',
-      label: 'Diagnostic AI Matrix',
-      sublabel: '11 False Positive Cases',
-      icon: ShieldCheck
-    },
-    {
       id: 'physics',
       label: 'Astrophysics Validation',
       sublabel: 'Kepler III & 48 Checks',

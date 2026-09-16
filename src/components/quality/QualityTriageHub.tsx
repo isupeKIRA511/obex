@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SessionSummary, Target, QualityCorrelations, NoiseFloorResponse } from '../../types';
 import { apiService } from '../../services/api';
+import { safeFixed } from '../../utils/targetUtils';
 import { 
   BarChart2, 
   ShieldAlert, 
@@ -140,9 +141,9 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
                 <div className="flex justify-between items-center">
                   <span className="text-textPrimary font-bold">{h.pair.join(' ↔ ')}</span>
                   <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
-                    Math.abs(h.r) > 0.5 ? 'text-opticsCyan bg-cyan-950/40' : 'text-textSecondary bg-card'
+                    Math.abs(h.r ?? 0) > 0.5 ? 'text-opticsCyan bg-cyan-950/40' : 'text-textSecondary bg-card'
                   }`}>
-                    r = {h.r.toFixed(3)}
+                    r = {safeFixed(h.r, 3)}
                   </span>
                 </div>
                 <p className="text-[11px] text-textSecondary font-sans">{h.note}</p>
@@ -169,14 +170,14 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
             <div className="p-3 rounded-xl bg-canvas border border-emerald-800/30 flex items-center justify-between">
               <span className="text-textSecondary font-sans">Best Survey Precision (Bright Stars):</span>
               <span className="text-base font-bold text-telemetryGreen">
-                {noiseFloor?.best_precision_ppt?.toFixed(2) || '4.76'} ppt
+                {safeFixed(noiseFloor?.best_precision_ppt, 2, '4.76')} ppt
               </span>
             </div>
 
             <div className="p-3 rounded-xl bg-canvas border border-borderHairline flex items-center justify-between">
               <span className="text-textSecondary font-sans">Detectable Transit Depth (1-Night 3-σ):</span>
               <span className="text-base font-bold text-opticsCyan">
-                {noiseFloor?.detectable_depth_pct_1night?.toFixed(2) || '1.43'}%
+                {safeFixed(noiseFloor?.detectable_depth_pct_1night, 2, '1.43')}%
               </span>
             </div>
 
@@ -190,13 +191,13 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
 
       </div>
 
-      {/* Triage Grid: All Sessions */}
+      {/* Full Observation Audit Run Table */}
       <div className="bg-card border border-borderHairline rounded-2xl p-6 space-y-4">
         <h3 className="font-bold text-textPrimary font-mono text-sm">
           Observing Run Triage Inventory (All 22 Sessions)
         </h3>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto max-h-96 overflow-y-auto">
           <table className="w-full text-left font-mono text-xs border-collapse">
             <thead>
               <tr className="border-b border-borderHairline text-textMuted text-[11px] uppercase">
@@ -216,8 +217,8 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
                   <td className="py-2.5 px-3 text-opticsCyan">{s.target}</td>
                   <td className="py-2.5 px-3 text-textSecondary">{s.night}</td>
                   <td className="py-2.5 px-3">{s.n_frames} exp</td>
-                  <td className="py-2.5 px-3 text-textSecondary">{s.span_hours.toFixed(2)}h</td>
-                  <td className="py-2.5 px-3 text-textSecondary">{s.median_cadence_s.toFixed(1)}s</td>
+                  <td className="py-2.5 px-3 text-textSecondary">{safeFixed(s.span_hours, 2)}h</td>
+                  <td className="py-2.5 px-3 text-textSecondary">{safeFixed(s.median_cadence_s, 1)}s</td>
                   <td className="py-2.5 px-3">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                       s.quality === 'good'
