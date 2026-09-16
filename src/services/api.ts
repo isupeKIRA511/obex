@@ -237,10 +237,11 @@ export const apiService = {
   // Gemini 2.5 Flash Plain-Language AI Session Explanation (Live LLM Endpoint)
   explainSession: async (sessionId: string, language: 'en' | 'ar' = 'ar', audience: string = 'student'): Promise<ExplainResponse | null> => {
     try {
+      const validAudience = audience === 'astrophysicist' ? 'astronomer' : (['student', 'astronomer', 'public'].includes(audience) ? audience : 'student');
       const res = await fetch(`${API_BASE_URL}/api/explain`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session_id: sessionId, language, audience })
+        body: JSON.stringify({ session_id: sessionId, language, audience: validAudience })
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const raw = await res.json();

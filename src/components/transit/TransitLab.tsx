@@ -70,10 +70,10 @@ export const TransitLab: React.FC<TransitLabProps> = ({
   const [explainData, setExplainData] = useState<ExplainResponse | null>(null);
   const [isExplaining, setIsExplaining] = useState(false);
   const [explainLanguage, setExplainLanguage] = useState<'ar' | 'en'>('ar');
-  const [explainAudience, setExplainAudience] = useState<'student' | 'astrophysicist'>('student');
+  const [explainAudience, setExplainAudience] = useState<'student' | 'astronomer' | 'public'>('student');
   const [explainError, setExplainError] = useState<string | null>(null);
 
-  const handleExplainSession = async (lang = explainLanguage, aud = explainAudience) => {
+  const handleExplainSession = async (lang = explainLanguage, aud: 'student' | 'astronomer' | 'public' = explainAudience) => {
     if (!selectedSession?.session_id) return;
     setIsExplaining(true);
     setExplainError(null);
@@ -1018,16 +1018,29 @@ export const TransitLab: React.FC<TransitLabProps> = ({
               </button>
               <button
                 onClick={() => {
-                  setExplainAudience('astrophysicist');
-                  if (explainData) handleExplainSession(explainLanguage, 'astrophysicist');
+                  setExplainAudience('astronomer');
+                  if (explainData) handleExplainSession(explainLanguage, 'astronomer');
                 }}
                 className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                  explainAudience === 'astrophysicist'
+                  explainAudience === 'astronomer'
                     ? 'bg-borderHairline text-white font-bold'
                     : 'text-textSecondary hover:text-textPrimary'
                 }`}
               >
-                Astrophysicist
+                Astrophysicist / Astronomer
+              </button>
+              <button
+                onClick={() => {
+                  setExplainAudience('public');
+                  if (explainData) handleExplainSession(explainLanguage, 'public');
+                }}
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                  explainAudience === 'public'
+                    ? 'bg-borderHairline text-white font-bold'
+                    : 'text-textSecondary hover:text-textPrimary'
+                }`}
+              >
+                Public
               </button>
             </div>
 
