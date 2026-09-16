@@ -4,7 +4,6 @@ import {
   Activity, 
   Layers, 
   ShieldCheck, 
-  Globe, 
   SlidersHorizontal,
   ChevronRight,
   Sparkles,
@@ -68,13 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: 'NASA Exoplanet Hub',
       sublabel: 'TAP Archive, HZ & Mission',
       icon: Sparkles
-    },
-    {
-      id: '3d',
-      label: '3D Celestial Suite',
-      sublabel: 'R3F Planets & NASA Eyes',
-      icon: Globe
-    },
+    }
   ];
 
   return (

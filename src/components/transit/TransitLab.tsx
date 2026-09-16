@@ -13,6 +13,7 @@ import {
 } from '../../types';
 import { apiService } from '../../services/api';
 import { isSameTarget, safeFixed } from '../../utils/targetUtils';
+import { generateExoplanetPDF } from '../../utils/pdfExport';
 import { 
   Activity, 
   Info, 
@@ -30,7 +31,8 @@ import {
   BookOpen,
   Bot,
   RefreshCw,
-  Cpu
+  Cpu,
+  Download
 } from 'lucide-react';
 
 interface TransitLabProps {
@@ -332,6 +334,21 @@ export const TransitLab: React.FC<TransitLabProps> = ({
           >
             <Layers className="w-3.5 h-3.5" />
             <span>{isPhaseFolded ? 'Exit Phase Fold' : 'Multi-Night Phase Fold'}</span>
+          </button>
+
+          {/* Quick PDF Dossier Export */}
+          <button
+            onClick={() => generateExoplanetPDF({
+              selectedTarget,
+              selectedSession,
+              planetPhysics,
+              explainData
+            })}
+            className="px-3 py-1.5 rounded-lg text-xs font-mono border border-borderHairline bg-canvas hover:border-opticsCyan text-textSecondary hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
+            title={`Export PDF Dossier for ${selectedTarget?.target || 'Active Exoplanet'}`}
+          >
+            <Download className="w-3.5 h-3.5 text-opticsCyan" />
+            <span>Export PDF Dossier</span>
           </button>
         </div>
       </div>

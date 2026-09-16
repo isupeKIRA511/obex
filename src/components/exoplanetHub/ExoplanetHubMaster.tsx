@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { NASAArchiveExoplanet } from '../../types';
+import { NASAArchiveExoplanet, Target } from '../../types';
 import { nasaArchiveService } from '../../services/nasaArchiveService';
+import { generateExoplanetPDF } from '../../utils/pdfExport';
 import { NASAArchiveExplorer } from './NASAArchiveExplorer';
 import { HabitableZoneAnalysis } from './HabitableZoneAnalysis';
 import { MissionCalculator } from './MissionCalculator';
@@ -12,7 +13,8 @@ import {
   Globe, 
   ShieldCheck, 
   Compass, 
-  Layers
+  Layers,
+  Download
 } from 'lucide-react';
 
 export const ExoplanetHubMaster: React.FC = () => {
@@ -126,6 +128,46 @@ export const ExoplanetHubMaster: React.FC = () => {
             <span>Mission Calculator</span>
           </button>
         </div>
+
+        {/* Quick Export PDF for Selected Planet */}
+        {selectedPlanet && (
+          <button
+            onClick={() => {
+              const targetObj: Target = {
+                target: selectedPlanet.pl_name,
+                v_mag: selectedPlanet.sy_vmag || 12.0,
+                transit_depth_pct: (selectedPlanet.pl_rade && selectedPlanet.st_rad) ? (Math.pow(selectedPlanet.pl_rade * 0.009158 / selectedPlanet.st_rad, 2) * 100) : 2.1,
+                duration_hours: 2.0,
+                period_days: selectedPlanet.pl_orbper || 1.5,
+                ra_deg: selectedPlanet.ra,
+                dec_deg: selectedPlanet.dec,
+                nights: 1
+              };
+              generateExoplanetPDF({
+                selectedTarget: targetObj,
+                planetPhysics: {
+                  target: selectedPlanet.pl_name,
+                  summary: `NASA Archive discovery (${selectedPlanet.discoverymethod}) orbiting ${selectedPlanet.hostname}.`,
+                  catalog_inputs: {
+                    target: selectedPlanet.pl_name,
+                    pl_orbper: selectedPlanet.pl_orbper,
+                    pl_orbsmax: selectedPlanet.pl_orbsmax,
+                    pl_eqt: selectedPlanet.pl_eqt,
+                    st_teff: selectedPlanet.st_teff,
+                    st_lum: selectedPlanet.st_lum,
+                    st_rad: selectedPlanet.st_rad,
+                    st_mass: selectedPlanet.st_mass
+                  }
+                }
+              });
+            }}
+            className="px-3.5 py-2 rounded-xl bg-card border border-borderHairline hover:border-opticsCyan text-xs font-mono text-textSecondary hover:text-white flex items-center gap-2 transition cursor-pointer shadow-sm"
+            title={`Export PDF Dossier for ${selectedPlanet.pl_name}`}
+          >
+            <Download className="w-3.5 h-3.5 text-opticsCyan" />
+            <span>Export {selectedPlanet.pl_name} PDF</span>
+          </button>
+        )}
       </div>
 
       {/* Active Tab View */}

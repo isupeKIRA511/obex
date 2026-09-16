@@ -5,7 +5,6 @@ import { apiService, FALLBACK_KPIS } from '../../services/api';
 
 interface BentoHeroProps {
   onExploreTransit: () => void;
-  onExplore3D: () => void;
   onExploreDiagnostic: () => void;
   onExplorePhysics?: () => void;
   onExploreHub?: () => void;
@@ -14,7 +13,6 @@ interface BentoHeroProps {
 
 export const BentoHero: React.FC<BentoHeroProps> = ({
   onExploreTransit,
-  onExplore3D,
   onExploreDiagnostic,
   onExplorePhysics,
   onExploreHub,
@@ -58,65 +56,96 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
 
         <div className="bg-card border border-borderHairline rounded-xl p-3 space-y-1">
           <div className="text-[10px] font-mono uppercase text-textMuted flex items-center justify-between">
-            <span>Physics Agreement</span>
+            <span>Observed Targets</span>
             <span className="w-1.5 h-1.5 rounded-full bg-opticsCyan"></span>
           </div>
-          <div className="text-xl font-bold text-opticsCyan font-mono">
-            {kpis?.physics_validation?.equation_checks_agree_pct ?? 87.5}%
+          <div className="text-xl font-bold text-textPrimary font-mono">
+            {kpis?.photometry?.total_targets ?? 8} Systems
           </div>
           <div className="text-[10px] text-textSecondary font-mono truncate">
-            42 of 48 checks |z| ≤ 2
+            {kpis?.photometry?.total_sessions ?? 22} Observing Runs
           </div>
         </div>
 
         <div className="bg-card border border-borderHairline rounded-xl p-3 space-y-1">
           <div className="text-[10px] font-mono uppercase text-textMuted flex items-center justify-between">
-            <span>Fastest Orbit</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-aerospaceBlue"></span>
+            <span>Control Sample</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-alertRose"></span>
+          </div>
+          <div className="text-xl font-bold text-alertRose font-mono">
+            6 Runs
+          </div>
+          <div className="text-[10px] text-textSecondary font-mono truncate">
+            Unusable Sky Calibration
+          </div>
+        </div>
+
+        <div className="bg-card border border-borderHairline rounded-xl p-3 space-y-1">
+          <div className="text-[10px] font-mono uppercase text-textMuted flex items-center justify-between">
+            <span>AI Discrimination</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+          </div>
+          <div className="text-xl font-bold text-purple-400 font-mono">
+            {kpis?.classifier?.f1_macro ? `${(kpis.classifier.f1_macro * 100).toFixed(1)}%` : '94.1%'}
+          </div>
+          <div className="text-[10px] text-textSecondary font-mono truncate">
+            6 Physical Classes
+          </div>
+        </div>
+
+        <div className="bg-card border border-borderHairline rounded-xl p-3 space-y-1">
+          <div className="text-[10px] font-mono uppercase text-textMuted flex items-center justify-between">
+            <span>Cutouts Ingested</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-telemetryGreen"></span>
           </div>
           <div className="text-xl font-bold text-textPrimary font-mono">
-            {kpis?.planets?.fastest?.value ?? 190.1} km/s
+            {kpis?.classifier?.n_cutouts?.toLocaleString() ?? '44,143'}
           </div>
           <div className="text-[10px] text-textSecondary font-mono truncate">
-            {kpis?.planets?.fastest?.planet ?? 'TrES-3 b'}
+            32x32 px Deep Learning
           </div>
         </div>
 
         <div className="bg-card border border-borderHairline rounded-xl p-3 space-y-1">
           <div className="text-[10px] font-mono uppercase text-textMuted flex items-center justify-between">
-            <span>Hottest Planet</span>
+            <span>Blind Search Dips</span>
             <span className="w-1.5 h-1.5 rounded-full bg-calibAmber"></span>
           </div>
           <div className="text-xl font-bold text-calibAmber font-mono">
-            {kpis?.planets?.hottest?.value ?? 1642.2} K
+            20 Dips
           </div>
           <div className="text-[10px] text-textSecondary font-mono truncate">
-            {kpis?.planets?.hottest?.planet ?? 'TrES-3 b'}
+            2,723 Star-Nights (Null)
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Headline & Telescope Specs Strip */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-2 border-b border-borderHairline">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-card border border-borderHairline text-opticsCyan">
+            <Satellite className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="text-xs font-mono font-bold text-textPrimary flex items-center gap-2">
+              <span>Robotic Photometric Pipeline • Cecilia 6&quot; Telescope</span>
+              <span className="text-[10px] px-2 py-0.5 rounded bg-blue-950/60 border border-blue-800/40 text-blue-300">
+                Live API Connected
+              </span>
+            </div>
+            <div className="text-[11px] text-textSecondary font-mono">
+              Amateur Astronomers Association (AAA) • Harvard-Smithsonian MicroObservatory
+            </div>
           </div>
         </div>
 
-        <div className="bg-card border border-borderHairline rounded-xl p-3 space-y-1">
-          <div className="text-[10px] font-mono uppercase text-textMuted flex items-center justify-between">
-            <span>Nearest Host</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-          </div>
-          <div className="text-xl font-bold text-textPrimary font-mono">
-            {kpis?.planets?.nearest?.value ?? 406.8} ly
-          </div>
-          <div className="text-[10px] text-textSecondary font-mono truncate">
-            {kpis?.planets?.nearest?.planet ?? 'WASP-11 b'} (Gaia)
-          </div>
-        </div>
-
-        <div className="bg-card border border-borderHairline rounded-xl p-3 space-y-1">
-          <div className="text-[10px] font-mono uppercase text-textMuted flex items-center justify-between">
-            <span>Dataset Scope</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-          </div>
-          <div className="text-xl font-bold text-textPrimary font-mono">
-            {kpis?.dataset?.science_frames ?? 1681}
-          </div>
-          <div className="text-[10px] text-textSecondary font-mono truncate">
+        <div className="flex items-center gap-4 text-xs font-mono text-textMuted">
+          <div><span className="text-textPrimary font-bold">5.0</span> arcsec/px</div>
+          <div className="w-1 h-1 rounded-full bg-borderHairline"></div>
+          <div><span className="text-textPrimary font-bold">60s</span> Exp (Clear Filter)</div>
+          <div className="w-1 h-1 rounded-full bg-borderHairline"></div>
+          <div className="text-telemetryGreen font-bold flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-telemetryGreen"></span>
             FITS Frames • 22 Nights
           </div>
         </div>
@@ -125,14 +154,13 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
       {/* Top Asymmetric Bento Grid (Direct clone of reference design structure) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
-        {/* Hero Card 1: 3D Mission Hardware & Target Overview (Spans 7 cols) */}
+        {/* Hero Card 1: Mission Hardware & Target Overview (Spans 7 cols) */}
         <div className="lg:col-span-7 bg-card border border-borderHairline rounded-2xl p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden group">
           {/* Subtle cosmic background glow */}
           <div className="absolute -right-20 -top-20 w-80 h-80 bg-aerospaceBlue/10 rounded-full blur-3xl pointer-events-none"></div>
           
           <div className="space-y-4 relative z-10">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-opticsCyan animate-ping"></span>
               <span className="text-[11px] font-mono uppercase tracking-wider text-opticsCyan">
                 Automated Mission Telemetry
               </span>
@@ -197,19 +225,19 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
           </div>
         </div>
 
-        {/* Hero Card 2: 3D Celestial / Satellite Render Preview (Spans 5 cols) */}
+        {/* Hero Card 2: NASA Exoplanet Discovery Hub & Habitable Zone Preview (Spans 5 cols) */}
         <div 
-          onClick={onExplore3D}
+          onClick={onExploreHub || onExploreTransit}
           className="lg:col-span-5 bg-card border border-borderHairline rounded-2xl p-6 flex flex-col justify-between cursor-pointer hover:border-borderSubtle transition-all relative overflow-hidden group"
         >
           <div className="flex items-center justify-between text-xs text-textSecondary mb-4">
-            <span className="font-mono">: 3D CELESTIAL SUITE</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-borderHairline text-opticsCyan">
-              R3F + GSAP 60 FPS
+            <span className="font-mono text-emerald-400">: NASA EXOPLANET HUB & HZ LAB</span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-borderHairline text-emerald-400">
+              Kopparapu 2013 + TAP API
             </span>
           </div>
 
-          {/* Embedded Visual 3D Preview */}
+          {/* Embedded Visual Preview */}
           <div className="w-full h-48 rounded-xl overflow-hidden bg-black relative border border-borderHairline flex items-center justify-center">
             <img 
               src="/assets/nasa_fov_apertures.png" 
@@ -218,17 +246,17 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
             <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs">
-              <span className="font-mono text-white text-[11px]">Procedural Planetary Globes</span>
-              <span className="text-opticsCyan text-[11px] flex items-center gap-1 font-medium">
-                Launch 3D Suite <ArrowRight className="w-3 h-3" />
+              <span className="font-mono text-white text-[11px]">NASA Archive & Mission Telemetry</span>
+              <span className="text-emerald-400 text-[11px] flex items-center gap-1 font-medium">
+                Launch Discovery Hub <ArrowRight className="w-3 h-3" />
               </span>
             </div>
           </div>
 
           <div className="pt-4 space-y-1">
-            <h3 className="font-semibold text-textPrimary text-sm">Interactive Procedural Textures & NASA Simulator.</h3>
+            <h3 className="font-semibold text-textPrimary text-sm">Direct NASA TAP Sync & Habitable Zone Lab.</h3>
             <p className="text-textSecondary text-xs leading-relaxed">
-              Standardized WebGL sphere mapping using high-res Solar System Scope textures with dynamic cloud rotation and city night lights.
+              Explore thousands of confirmed planets, Kopparapu atmospheric boundaries, and relativistic interstellar mission trajectories.
             </p>
           </div>
         </div>

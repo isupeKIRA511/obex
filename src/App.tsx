@@ -6,7 +6,6 @@ import { TransitLab } from './components/transit/TransitLab';
 import { FITSExplorer } from './components/fits/FITSExplorer';
 import { FalsePositiveCases } from './components/diagnostic/FalsePositiveCases';
 import { QualityTriageHub } from './components/quality/QualityTriageHub';
-import { CelestialSuite } from './components/3d/CelestialSuite';
 import { AstrophysicsValidation } from './components/physics/AstrophysicsValidation';
 import { ExoplanetHubMaster } from './components/exoplanetHub/ExoplanetHubMaster';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
@@ -30,7 +29,8 @@ export const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>(() => {
     if (typeof window !== 'undefined' && window.location.hash) {
-      return window.location.hash.replace('#', '');
+      const h = window.location.hash.replace('#', '');
+      if (h !== '3d') return h;
     }
     return 'bento';
   });
@@ -45,7 +45,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash) setActiveTab(hash);
+      if (hash && hash !== '3d') setActiveTab(hash);
     };
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
@@ -61,96 +61,98 @@ export const App: React.FC = () => {
   const [currentLightCurve, setCurrentLightCurve] = useState<SessionLightCurve | null>(null);
   const [isLoadingLightCurve, setIsLoadingLightCurve] = useState<boolean>(false);
 
-  // Fetch live API data on mount
+  // Synchronize target metadata & fetch targets/sessions from backend API
   useEffect(() => {
-    const loadData = async () => {
+    let isCancelled = false;
+    const initializeTelemetry = async () => {
       try {
-        const [m, t, s, fp] = await Promise.all([
+        const [metaRes, targetsRes, sessionsRes, fpRes] = await Promise.all([
           apiService.getMeta(),
           apiService.getTargets(),
           apiService.getSessions(),
           apiService.getFalsePositiveCases()
         ]);
-        if (m) setMeta(m);
-        if (t && t.length > 0) {
-          const enrichedTargets = t.map((target) => {
-            const key = target.target.toLowerCase().replace(/[^a-z0-9]/g, '');
-            const b = TARGET_BENCHMARKS[target.target.toLowerCase()] || TARGET_BENCHMARKS[key];
-            return {
-              ...target,
-              v_mag: target.v_mag ?? b?.v_mag ?? 12.5,
-              period_days: target.period_days ?? b?.period_days ?? 1.5,
-              transit_depth_pct: target.transit_depth_pct ?? b?.depth_pct ?? 2.1,
-              duration_hours: target.duration_hours ?? b?.duration_hours ?? 1.8
-            };
-          });
-          setTargets(enrichedTargets);
-          setSelectedTarget(enrichedTargets[0]);
-          if (s && s.length > 0) {
-            const initialSession = findSessionForTarget(s, enrichedTargets[0].target);
-            if (initialSession) setSelectedSession(initialSession);
-          }
-        }
-        if (s && s.length > 0) {
-          setSessions(s);
-        }
-        if (fp && fp.length > 0) {
-          setFalsePositiveCases(fp);
-        }
-      } catch (e) {
-        console.warn('Using scientific cached dataset.', e);
-      }
-    };
-    loadData();
-  }, []);
-
-  // When target changes, auto-select its best session using fuzzy matching
-  const handleSelectTarget = (target: Target) => {
-    setSelectedTarget(target);
-    const matchingSession = findSessionForTarget(sessions, target.target);
-    if (matchingSession) {
-      setSelectedSession(matchingSession);
-    }
-  };
-
-  // Fetch light curve when session changes
-  useEffect(() => {
-    let isCancelled = false;
-    const fetchCurve = async () => {
-      if (!selectedSession?.session_id) return;
-      setIsLoadingLightCurve(true);
-      try {
-        const curve = await apiService.getLightCurve(selectedSession.session_id);
+        
         if (!isCancelled) {
-          setCurrentLightCurve(curve);
+          if (metaRes) setMeta(metaRes);
+          if (targetsRes && targetsRes.length > 0) {
+            setTargets(targetsRes);
+            setSelectedTarget(targetsRes[0]);
+          }
+          if (sessionsRes && sessionsRes.length > 0) {
+            setSessions(sessionsRes);
+            setSelectedSession(sessionsRes[0]);
+          }
+          if (fpRes && fpRes.length > 0) setFalsePositiveCases(fpRes);
         }
       } catch (err) {
-        console.error('Error fetching light curve:', err);
+        console.warn('Using robust fallback telemetry store:', err);
+      }
+    };
+
+    initializeTelemetry();
+    return () => { isCancelled = true; };
+  }, []);
+
+  // Synchronize active session & light curve whenever target changes
+  useEffect(() => {
+    if (!selectedTarget || sessions.length === 0) return;
+    const matchedSession = findSessionForTarget(sessions, selectedTarget.target);
+    if (matchedSession) {
+      setSelectedSession(matchedSession);
+    }
+  }, [selectedTarget, sessions]);
+
+  // Fetch real transit photometry light curve when session changes
+  useEffect(() => {
+    if (!selectedSession?.session_id) return;
+    let isCancelled = false;
+    const loadLightCurve = async () => {
+      setIsLoadingLightCurve(true);
+      try {
+        const data = await apiService.getLightCurve(selectedSession.session_id);
+        if (!isCancelled) {
+          setCurrentLightCurve(data);
+        }
+      } catch (err) {
+        console.warn('Failed loading session light curve:', err);
       } finally {
         if (!isCancelled) setIsLoadingLightCurve(false);
       }
     };
-    fetchCurve();
-    return () => {
-      isCancelled = true;
-    };
+    loadLightCurve();
+    return () => { isCancelled = true; };
   }, [selectedSession]);
+
+  const handleSelectTarget = (target: Target) => {
+    const key = target.target.toLowerCase();
+    const bench = TARGET_BENCHMARKS[key];
+    const enrichedTarget: Target = {
+      ...target,
+      transit_depth_pct: bench?.depth_pct ?? target.transit_depth_pct ?? 2.10,
+      duration_hours: bench?.duration_hours ?? target.duration_hours ?? 1.82,
+      period_days: bench?.period_days ?? target.period_days ?? 1.4822,
+      v_mag: bench?.v_mag ?? target.v_mag ?? 13.72,
+    };
+    setSelectedTarget(enrichedTarget);
+  };
 
   return (
     <ErrorBoundary fallbackTitle="Application Root Crash Protection">
       <div className="min-h-screen bg-canvas text-textPrimary flex flex-col font-sans selection:bg-aerospaceBlue selection:text-white">
         
-        {/* Top Header featuring ONLY K.A.A in the center + sidebar toggle */}
+        {/* Top Header featuring OBEX + Dynamic PDF Dossier Export */}
         <Header
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
-          totalFiles={meta?.total_files || 1741}
+          selectedTarget={selectedTarget}
+          selectedSession={selectedSession}
         />
 
         {/* Main Body with Left Interactive Sidebar Menu + Dynamic Workspace */}
         <div className="flex-1 flex overflow-x-hidden">
           
-          {/* Left Side Menu (Collapsible & 0.5s Interactive Transition) */}
+          {/* Left Side Menu (Collapsible & 0.4s Symmetrical Transition) */}
           <Sidebar
             isOpen={isSidebarOpen}
             activeTab={activeTab}
@@ -166,7 +168,6 @@ export const App: React.FC = () => {
               <ErrorBoundary fallbackTitle="Mission Control Hub Error">
                 <BentoHero
                   onExploreTransit={() => handleTabChange('transit')}
-                  onExplore3D={() => handleTabChange('3d')}
                   onExploreDiagnostic={() => handleTabChange('diagnostic')}
                   onExplorePhysics={() => handleTabChange('physics')}
                   onExploreHub={() => handleTabChange('exoplanethub')}
@@ -223,12 +224,6 @@ export const App: React.FC = () => {
             {activeTab === 'exoplanethub' && (
               <ErrorBoundary fallbackTitle="NASA Exoplanet Hub Error">
                 <ExoplanetHubMaster />
-              </ErrorBoundary>
-            )}
-
-            {activeTab === '3d' && (
-              <ErrorBoundary fallbackTitle="3D Celestial Suite Error">
-                <CelestialSuite />
               </ErrorBoundary>
             )}
           </main>
