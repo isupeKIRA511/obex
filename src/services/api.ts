@@ -71,11 +71,29 @@ export const FALLBACK_TARGETS: Target[] = [
 ];
 
 export const FALLBACK_SESSIONS: SessionSummary[] = [
-  { session_id: 'TRES-5__2026-08-20', target: 'TRES-5', night: '2026-08-20', n_frames: 87, start_utc: '2026-08-20T01:24:56Z', end_utc: '2026-08-20T05:20:59Z', span_hours: 3.93, median_cadence_s: 179.8, quality: 'good' },
-  { session_id: 'TRES-5__2026-08-26', target: 'TRES-5', night: '2026-08-26', n_frames: 91, start_utc: '2026-08-25T23:44:46Z', end_utc: '2026-08-26T03:21:15Z', span_hours: 3.61, median_cadence_s: 180.1, quality: 'good' },
-  { session_id: 'TRES-5__2026-08-29', target: 'TRES-5', night: '2026-08-29', n_frames: 93, start_utc: '2026-08-28T22:52:50Z', end_utc: '2026-08-29T02:30:15Z', span_hours: 3.62, median_cadence_s: 179.9, quality: 'good' },
-  { session_id: 'TRES-5__2026-09-01', target: 'TRES-5', night: '2026-09-01', n_frames: 88, start_utc: '2026-08-31T22:00:38Z', end_utc: '2026-09-01T01:39:15Z', span_hours: 3.64, median_cadence_s: 180.2, quality: 'good' },
-  { session_id: 'TRES-5__2026-09-04', target: 'TRES-5', night: '2026-09-04', n_frames: 82, start_utc: '2026-09-03T21:10:43Z', end_utc: '2026-09-03T23:57:15Z', span_hours: 2.78, median_cadence_s: 179.5, quality: 'good' }
+  { session_id: 'CoRoT-2__2026-08-09', target: 'CoRoT-2', night: '2026-08-09', n_frames: 87, start_utc: '2026-08-09T08:00:00Z', end_utc: '2026-08-09T12:17:00Z', span_hours: 4.29, median_cadence_s: 179.7, quality: 'good' },
+  { session_id: 'CoRoT-2__2026-08-16', target: 'CoRoT-2', night: '2026-08-16', n_frames: 86, start_utc: '2026-08-16T08:00:00Z', end_utc: '2026-08-16T12:17:00Z', span_hours: 4.29, median_cadence_s: 180.3, quality: 'good' },
+  { session_id: 'CoRoT-2__2026-08-23', target: 'CoRoT-2', night: '2026-08-23', n_frames: 86, start_utc: '2026-08-23T08:00:00Z', end_utc: '2026-08-23T12:17:00Z', span_hours: 4.29, median_cadence_s: 180.3, quality: 'unusable' },
+  { session_id: 'CoRoT-2__2026-08-30', target: 'CoRoT-2', night: '2026-08-30', n_frames: 87, start_utc: '2026-08-30T08:00:00Z', end_utc: '2026-08-30T12:29:00Z', span_hours: 4.49, median_cadence_s: 180.0, quality: 'unusable' },
+  { session_id: 'HATP-10__2026-09-02', target: 'HATP-10', night: '2026-09-02', n_frames: 104, start_utc: '2026-09-02T07:00:00Z', end_utc: '2026-09-02T12:00:00Z', span_hours: 5.00, median_cadence_s: 180.3, quality: 'marginal' },
+  { session_id: 'HATP-10__2026-09-05', target: 'HATP-10', night: '2026-09-05', n_frames: 93, start_utc: '2026-09-05T07:42:00Z', end_utc: '2026-09-05T12:21:00Z', span_hours: 4.65, median_cadence_s: 144.3, quality: 'good' },
+  { session_id: 'Qatar-1__2026-08-18', target: 'Qatar-1', night: '2026-08-18', n_frames: 75, start_utc: '2026-08-18T08:24:00Z', end_utc: '2026-08-18T12:25:00Z', span_hours: 4.02, median_cadence_s: 180.4, quality: 'good' },
+  { session_id: 'Qatar-1__2026-08-21', target: 'Qatar-1', night: '2026-08-21', n_frames: 74, start_utc: '2026-08-21T04:37:00Z', end_utc: '2026-08-21T08:15:00Z', span_hours: 3.63, median_cadence_s: 180.3, quality: 'good' },
+  { session_id: 'Qatar-1__2026-08-28', target: 'Qatar-1', night: '2026-08-28', n_frames: 73, start_utc: '2026-08-28T07:00:00Z', end_utc: '2026-08-28T10:39:00Z', span_hours: 3.64, median_cadence_s: 180.3, quality: 'unusable' },
+  { session_id: 'TRES-1__2026-08-06', target: 'TRES-1', night: '2026-08-06', n_frames: 91, start_utc: '2026-08-06T07:34:00Z', end_utc: '2026-08-06T12:38:00Z', span_hours: 5.07, median_cadence_s: 180.4, quality: 'unusable' },
+  { session_id: 'TRES-3__2026-08-10', target: 'TRES-3', night: '2026-08-10', n_frames: 70, start_utc: '2026-08-10T06:06:00Z', end_utc: '2026-08-10T09:55:00Z', span_hours: 3.82, median_cadence_s: 180.4, quality: 'good' },
+  { session_id: 'TRES-3__2026-08-14', target: 'TRES-3', night: '2026-08-14', n_frames: 51, start_utc: '2026-08-14T04:09:00Z', end_utc: '2026-08-14T06:39:00Z', span_hours: 2.50, median_cadence_s: 180.0, quality: 'good' },
+  { session_id: 'TRES-3__2026-08-27', target: 'TRES-3', night: '2026-08-27', n_frames: 70, start_utc: '2026-08-27T05:39:00Z', end_utc: '2026-08-27T09:06:00Z', span_hours: 3.44, median_cadence_s: 179.7, quality: 'good' },
+  { session_id: 'TRES-3__2026-08-31', target: 'TRES-3', night: '2026-08-31', n_frames: 70, start_utc: '2026-08-31T03:47:00Z', end_utc: '2026-08-31T07:09:00Z', span_hours: 3.37, median_cadence_s: 180.4, quality: 'good' },
+  { session_id: 'TRES-5__2026-08-17', target: 'TRES-5', night: '2026-08-17', n_frames: 74, start_utc: '2026-08-17T09:17:00Z', end_utc: '2026-08-17T14:28:00Z', span_hours: 5.17, median_cadence_s: 180.3, quality: 'good' },
+  { session_id: 'TRES-5__2026-08-20', target: 'TRES-5', night: '2026-08-20', n_frames: 74, start_utc: '2026-08-20T08:24:00Z', end_utc: '2026-08-20T12:20:00Z', span_hours: 3.93, median_cadence_s: 180.3, quality: 'good' },
+  { session_id: 'TRES-5__2026-08-26', target: 'TRES-5', night: '2026-08-26', n_frames: 74, start_utc: '2026-08-26T06:44:00Z', end_utc: '2026-08-26T10:21:00Z', span_hours: 3.61, median_cadence_s: 180.3, quality: 'good' },
+  { session_id: 'TRES-5__2026-08-29', target: 'TRES-5', night: '2026-08-29', n_frames: 74, start_utc: '2026-08-29T05:52:00Z', end_utc: '2026-08-29T09:30:00Z', span_hours: 3.62, median_cadence_s: 180.4, quality: 'good' },
+  { session_id: 'TRES-5__2026-09-01', target: 'TRES-5', night: '2026-09-01', n_frames: 74, start_utc: '2026-09-01T05:00:00Z', end_utc: '2026-09-01T08:39:00Z', span_hours: 3.64, median_cadence_s: 180.3, quality: 'good' },
+  { session_id: 'TRES-5__2026-09-04', target: 'TRES-5', night: '2026-09-04', n_frames: 57, start_utc: '2026-09-04T04:10:00Z', end_utc: '2026-09-04T06:57:00Z', span_hours: 2.78, median_cadence_s: 180.3, quality: 'good' },
+  { session_id: 'WASP-10__2026-08-08', target: 'WASP-10', night: '2026-08-08', n_frames: 86, start_utc: '2026-08-08T05:40:00Z', end_utc: '2026-08-08T09:54:00Z', span_hours: 4.23, median_cadence_s: 180.4, quality: 'unusable' },
+  { session_id: 'WASP-2__2026-08-11', target: 'WASP-2', night: '2026-08-11', n_frames: 78, start_utc: '2026-08-11T06:54:00Z', end_utc: '2026-08-11T10:45:00Z', span_hours: 3.85, median_cadence_s: 180.1, quality: 'unusable' },
+  { session_id: 'WASP-2__2026-08-24', target: 'WASP-2', night: '2026-08-24', n_frames: 77, start_utc: '2026-08-24T04:52:00Z', end_utc: '2026-08-24T08:39:00Z', span_hours: 3.78, median_cadence_s: 180.3, quality: 'marginal' }
 ];
 
 export const FALLBACK_FALSE_POSITIVES: FalsePositiveCase[] = [

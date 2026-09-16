@@ -11,6 +11,7 @@ import {
   PlanetDetailResponse
 } from '../../types';
 import { apiService } from '../../services/api';
+import { isSameTarget, safeFixed } from '../../utils/targetUtils';
 import { 
   Activity, 
   Info, 
@@ -72,10 +73,15 @@ export const TransitLab: React.FC<TransitLabProps> = ({
     return () => { isCancelled = true; };
   }, [selectedTarget]);
 
-  // Filter sessions for selected target
-  const targetSessions = sessions.filter(
-    (s) => s.target.toLowerCase() === selectedTarget.target.toLowerCase()
-  );
+  // Filter sessions for selected target with fuzzy matching
+  const targetSessions = useMemo(() => {
+    const filtered = sessions.filter(
+      (s) => isSameTarget(s.target, selectedTarget?.target)
+    );
+    if (filtered.length > 0) return filtered;
+    if (selectedSession) return [selectedSession];
+    return sessions;
+  }, [sessions, selectedTarget, selectedSession]);
 
   // Load live ephemerides & depths on mount
   useEffect(() => {
@@ -113,16 +119,17 @@ export const TransitLab: React.FC<TransitLabProps> = ({
     return () => { isCancelled = true; };
   }, [isPhaseFolded, selectedTarget]);
 
-  // Match live ephemeris row for current target
+  // Match live ephemeris row for current target with fuzzy matching
   const activeEphemeris = useMemo(() => {
     return ephemerides.find(
-      (r) => r.hostname.toLowerCase() === selectedTarget.target.toLowerCase() ||
-             (r.pl_name && r.pl_name.toLowerCase().startsWith(selectedTarget.target.toLowerCase()))
+      (r) => isSameTarget(r.hostname, selectedTarget?.target) ||
+             (r.pl_name && isSameTarget(r.pl_name, selectedTarget?.target))
     );
   }, [ephemerides, selectedTarget]);
 
   // Match live measured depth row for current session
   const activeMeasuredDepth = useMemo(() => {
+    if (!selectedSession?.session_id) return undefined;
     return measuredDepths.find(
       (r) => r.session_id === selectedSession.session_id
     );
@@ -175,11 +182,13 @@ export const TransitLab: React.FC<TransitLabProps> = ({
 
   // Scales
   const scaleX = (val: number) => {
-    return padding.left + ((val - xExtent[0]) / (xExtent[1] - xExtent[0])) * innerWidth;
+    const span = (xExtent[1] - xExtent[0]) || 1;
+    return padding.left + ((val - xExtent[0]) / span) * innerWidth;
   };
 
   const scaleY = (val: number) => {
-    return padding.top + innerHeight - ((val - yExtent[0]) / (yExtent[1] - yExtent[0])) * innerHeight;
+    const span = (yExtent[1] - yExtent[0]) || 1;
+    return padding.top + innerHeight - ((val - yExtent[0]) / span) * innerHeight;
   };
 
   // Markers for ingress/mid/egress
@@ -206,11 +215,13 @@ export const TransitLab: React.FC<TransitLabProps> = ({
   }, [phasePoints]);
 
   const scalePhaseX = (val: number) => {
-    return padding.left + ((val - phaseXExtent[0]) / (phaseXExtent[1] - phaseXExtent[0])) * innerWidth;
+    const span = (phaseXExtent[1] - phaseXExtent[0]) || 1;
+    return padding.left + ((val - phaseXExtent[0]) / span) * innerWidth;
   };
 
   const scalePhaseY = (val: number) => {
-    return padding.top + innerHeight - ((val - phaseYExtent[0]) / (phaseYExtent[1] - phaseYExtent[0])) * innerHeight;
+    const span = (phaseYExtent[1] - phaseYExtent[0]) || 1;
+    return padding.top + innerHeight - ((val - phaseYExtent[0]) / span) * innerHeight;
   };
 
   return (
@@ -223,7 +234,7 @@ export const TransitLab: React.FC<TransitLabProps> = ({
         <div className="flex items-center gap-3">
           <label className="text-xs text-textSecondary font-mono uppercase">Target System:</label>
           <select
-            value={selectedTarget.target}
+            value={selectedTarget?.target || ''}
             onChange={(e) => {
               const found = targets.find((t) => t.target === e.target.value);
               if (found) setSelectedTarget(found);
@@ -242,7 +253,7 @@ export const TransitLab: React.FC<TransitLabProps> = ({
         <div className="flex items-center gap-3">
           <label className="text-xs text-textSecondary font-mono uppercase">Session Triage:</label>
           <select
-            value={selectedSession.session_id}
+            value={selectedSession?.session_id || (targetSessions[0]?.session_id ?? '')}
             onChange={(e) => {
               const s = sessions.find((item) => item.session_id === e.target.value);
               if (s) setSelectedSession(s);
@@ -268,27 +279,27 @@ export const TransitLab: React.FC<TransitLabProps> = ({
                   ? 'bg-amber-950/60 border-amber-600 text-calibAmber'
                   : 'bg-canvas border-borderHairline text-textSecondary hover:text-white'
               }`}
-              title="Compare differential normalization with raw target-only flux"
             >
-              {showRawComparison ? 'Viewing: Raw Target Flux' : 'Viewing: Calibrated Differential Flux'}
+              {showRawComparison ? 'Mode: Raw Target Only' : 'Mode: Differential Calibrated'}
             </button>
           )}
 
-          {/* Phase Folded Mode Toggle */}
+          {/* Phase Fold Toggle */}
           <button
             onClick={() => setIsPhaseFolded(!isPhaseFolded)}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-mono border flex items-center gap-2 transition-all cursor-pointer ${
               isPhaseFolded
-                ? 'bg-aerospaceBlue text-white font-semibold shadow-md shadow-blue-500/20'
-                : 'bg-canvas border border-borderHairline text-textSecondary hover:text-textPrimary'
+                ? 'bg-purple-950/60 border-purple-500 text-purple-300 font-bold shadow-lg shadow-purple-950/30'
+                : 'bg-canvas border-borderHairline text-textSecondary hover:text-white'
             }`}
           >
-            {isPhaseFolded ? 'Phase-Folded (All Nights)' : 'Single Session View'}
+            <Layers className="w-3.5 h-3.5" />
+            <span>{isPhaseFolded ? 'Exit Phase Fold' : 'Multi-Night Phase Fold'}</span>
           </button>
         </div>
       </div>
 
-      {/* Main Layout: Interactive Chart Canvas (8 cols) + Live NASA Parameters (4 cols) */}
+      {/* Main Dual-Column Analysis Hub */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         {/* Interactive Light Curve SVG Canvas */}
@@ -301,8 +312,8 @@ export const TransitLab: React.FC<TransitLabProps> = ({
                 <span className={`w-2.5 h-2.5 rounded-full ${isPhaseFolded ? 'bg-purple-400 animate-pulse' : 'bg-opticsCyan'}`}></span>
                 <h2 className="text-base font-bold text-textPrimary font-mono">
                   {isPhaseFolded 
-                    ? `Multi-Night Phase-Folded Light Curve (${selectedTarget.target})` 
-                    : `Live Transit Photometry (${selectedSession.session_id})`}
+                    ? `Multi-Night Phase-Folded Light Curve (${selectedTarget?.target || 'Target'})` 
+                    : `Live Transit Photometry (${selectedSession?.session_id || 'Session'})`}
                 </h2>
               </div>
               <p className="text-xs text-textSecondary mt-1">
@@ -317,10 +328,10 @@ export const TransitLab: React.FC<TransitLabProps> = ({
               {lightCurve && !isPhaseFolded && (
                 <>
                   <span className="px-2 py-0.5 rounded bg-blue-950/50 border border-blue-800/40 text-blue-300 text-[11px]">
-                    RMS: {lightCurve.rms_ppt.toFixed(1)} ppt
+                    RMS: {safeFixed(lightCurve.rms_ppt, 1)} ppt
                   </span>
                   <span className="px-2 py-0.5 rounded bg-emerald-950/50 border border-emerald-800/40 text-telemetryGreen text-[11px] font-bold">
-                    Gain: {lightCurve.improvement_factor.toFixed(1)}x Cleaner
+                    Gain: {safeFixed(lightCurve.improvement_factor, 1)}x Cleaner
                   </span>
                 </>
               )}

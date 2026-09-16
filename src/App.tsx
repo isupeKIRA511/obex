@@ -8,8 +8,10 @@ import { FalsePositiveCases } from './components/diagnostic/FalsePositiveCases';
 import { QualityTriageHub } from './components/quality/QualityTriageHub';
 import { CelestialSuite } from './components/3d/CelestialSuite';
 import { AstrophysicsValidation } from './components/physics/AstrophysicsValidation';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { findSessionForTarget } from './utils/targetUtils';
 import { apiService, FALLBACK_TARGETS, FALLBACK_SESSIONS, FALLBACK_META, FALLBACK_FALSE_POSITIVES } from './services/api';
-import { Target, SessionSummary, DatasetMeta, FalsePositiveCase, LightCurvePoint } from './types';
+import { Target, SessionSummary, DatasetMeta, FalsePositiveCase, SessionLightCurve } from './types';
 
 const TARGET_BENCHMARKS: Record<string, { v_mag: number; depth_pct: number; duration_hours: number; period_days: number }> = {
   'tres-5': { v_mag: 13.72, depth_pct: 2.10, duration_hours: 1.82, period_days: 1.4822 },
@@ -20,6 +22,7 @@ const TARGET_BENCHMARKS: Record<string, { v_mag: number; depth_pct: number; dura
   'qatar-1': { v_mag: 12.84, depth_pct: 2.05, duration_hours: 1.60, period_days: 1.4200 },
   'corot-2': { v_mag: 12.57, depth_pct: 3.40, duration_hours: 2.25, period_days: 1.7429 },
   'hat-p-10': { v_mag: 11.89, depth_pct: 1.45, duration_hours: 2.70, period_days: 3.7224 },
+  'hatp-10': { v_mag: 11.89, depth_pct: 1.45, duration_hours: 2.70, period_days: 3.7224 },
 };
 
 export const App: React.FC = () => {
@@ -67,7 +70,7 @@ export const App: React.FC = () => {
           apiService.getSessions(),
           apiService.getFalsePositiveCases()
         ]);
-        setMeta(m);
+        if (m) setMeta(m);
         if (t && t.length > 0) {
           const enrichedTargets = t.map((target) => {
             const key = target.target.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -82,10 +85,13 @@ export const App: React.FC = () => {
           });
           setTargets(enrichedTargets);
           setSelectedTarget(enrichedTargets[0]);
+          if (s && s.length > 0) {
+            const initialSession = findSessionForTarget(s, enrichedTargets[0].target);
+            if (initialSession) setSelectedSession(initialSession);
+          }
         }
         if (s && s.length > 0) {
           setSessions(s);
-          setSelectedSession(s[0]);
         }
         if (fp && fp.length > 0) {
           setFalsePositiveCases(fp);
@@ -97,12 +103,10 @@ export const App: React.FC = () => {
     loadData();
   }, []);
 
-  // When target changes, auto-select its first session if current session is for a different target
+  // When target changes, auto-select its best session using fuzzy matching
   const handleSelectTarget = (target: Target) => {
     setSelectedTarget(target);
-    const matchingSession = sessions.find(
-      (s) => s.target.toLowerCase() === target.target.toLowerCase()
-    );
+    const matchingSession = findSessionForTarget(sessions, target.target);
     if (matchingSession) {
       setSelectedSession(matchingSession);
     }
@@ -132,82 +136,98 @@ export const App: React.FC = () => {
   }, [selectedSession]);
 
   return (
-    <div className="min-h-screen bg-canvas text-textPrimary flex flex-col font-sans selection:bg-aerospaceBlue selection:text-white">
-      
-      {/* Top Header featuring ONLY K.A.A in the center + sidebar toggle */}
-      <Header
-        isSidebarOpen={isSidebarOpen}
-        setIsSidebarOpen={setIsSidebarOpen}
-        totalFiles={meta.total_files}
-      />
-
-      {/* Main Body with Left Interactive Sidebar Menu + Dynamic Workspace */}
-      <div className="flex-1 flex overflow-x-hidden">
+    <ErrorBoundary fallbackTitle="Application Root Crash Protection">
+      <div className="min-h-screen bg-canvas text-textPrimary flex flex-col font-sans selection:bg-aerospaceBlue selection:text-white">
         
-        {/* Left Side Menu (Collapsible & 0.5s Interactive Transition) */}
-        <Sidebar
-          isOpen={isSidebarOpen}
-          activeTab={activeTab}
-          setActiveTab={handleTabChange}
-          selectedTarget={selectedTarget}
-          targets={targets}
-          setSelectedTarget={handleSelectTarget}
+        {/* Top Header featuring ONLY K.A.A in the center + sidebar toggle */}
+        <Header
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+          totalFiles={meta?.total_files || 1741}
         />
 
-        {/* Dynamic Workspace Canvas */}
-        <main className="flex-1 p-6 lg:p-8 flex flex-col items-center overflow-y-auto w-full">
-          {activeTab === 'bento' && (
-            <BentoHero
-              onExploreTransit={() => handleTabChange('transit')}
-              onExplore3D={() => handleTabChange('3d')}
-              onExploreDiagnostic={() => handleTabChange('diagnostic')}
-              onExplorePhysics={() => handleTabChange('physics')}
-              selectedTarget={selectedTarget}
-            />
-          )}
+        {/* Main Body with Left Interactive Sidebar Menu + Dynamic Workspace */}
+        <div className="flex-1 flex overflow-x-hidden">
+          
+          {/* Left Side Menu (Collapsible & 0.5s Interactive Transition) */}
+          <Sidebar
+            isOpen={isSidebarOpen}
+            activeTab={activeTab}
+            setActiveTab={handleTabChange}
+            selectedTarget={selectedTarget}
+            targets={targets}
+            setSelectedTarget={handleSelectTarget}
+          />
 
-          {activeTab === 'transit' && (
-            <TransitLab
-              targets={targets}
-              sessions={sessions}
-              selectedTarget={selectedTarget}
-              setSelectedTarget={handleSelectTarget}
-              selectedSession={selectedSession}
-              setSelectedSession={setSelectedSession}
-              lightCurve={currentLightCurve}
-              isLoadingLightCurve={isLoadingLightCurve}
-            />
-          )}
+          {/* Dynamic Workspace Canvas */}
+          <main className="flex-1 p-6 lg:p-8 flex flex-col items-center overflow-y-auto w-full">
+            {activeTab === 'bento' && (
+              <ErrorBoundary fallbackTitle="Mission Control Hub Error">
+                <BentoHero
+                  onExploreTransit={() => handleTabChange('transit')}
+                  onExplore3D={() => handleTabChange('3d')}
+                  onExploreDiagnostic={() => handleTabChange('diagnostic')}
+                  onExplorePhysics={() => handleTabChange('physics')}
+                  selectedTarget={selectedTarget}
+                />
+              </ErrorBoundary>
+            )}
 
-          {activeTab === 'fits' && (
-            <FITSExplorer
-              selectedTarget={selectedTarget}
-              selectedSession={selectedSession}
-            />
-          )}
+            {activeTab === 'transit' && (
+              <ErrorBoundary fallbackTitle="Transit Photometry Lab Error">
+                <TransitLab
+                  targets={targets}
+                  sessions={sessions}
+                  selectedTarget={selectedTarget}
+                  setSelectedTarget={handleSelectTarget}
+                  selectedSession={selectedSession}
+                  setSelectedSession={setSelectedSession}
+                  lightCurve={currentLightCurve}
+                  isLoadingLightCurve={isLoadingLightCurve}
+                />
+              </ErrorBoundary>
+            )}
 
-          {activeTab === 'diagnostic' && (
-            <FalsePositiveCases cases={falsePositiveCases} />
-          )}
+            {activeTab === 'fits' && (
+              <ErrorBoundary fallbackTitle="FITS Frame & Calibration Hub Error">
+                <FITSExplorer
+                  selectedTarget={selectedTarget}
+                  selectedSession={selectedSession}
+                />
+              </ErrorBoundary>
+            )}
 
-          {activeTab === 'physics' && (
-            <AstrophysicsValidation />
-          )}
+            {activeTab === 'diagnostic' && (
+              <ErrorBoundary fallbackTitle="Diagnostic False Positive Matrix Error">
+                <FalsePositiveCases cases={falsePositiveCases} />
+              </ErrorBoundary>
+            )}
 
-          {activeTab === 'quality' && (
-            <QualityTriageHub 
-              sessions={sessions} 
-              targets={targets} 
-            />
-          )}
+            {activeTab === 'physics' && (
+              <ErrorBoundary fallbackTitle="Astrophysics Validation Hub Error">
+                <AstrophysicsValidation />
+              </ErrorBoundary>
+            )}
 
-          {activeTab === '3d' && (
-            <CelestialSuite />
-          )}
-        </main>
+            {activeTab === 'quality' && (
+              <ErrorBoundary fallbackTitle="Quality & Triage Hub Error">
+                <QualityTriageHub 
+                  sessions={sessions} 
+                  targets={targets} 
+                />
+              </ErrorBoundary>
+            )}
+
+            {activeTab === '3d' && (
+              <ErrorBoundary fallbackTitle="3D Celestial Suite Error">
+                <CelestialSuite />
+              </ErrorBoundary>
+            )}
+          </main>
+        </div>
+
       </div>
-
-    </div>
+    </ErrorBoundary>
   );
 };
 

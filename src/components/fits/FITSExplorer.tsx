@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Target, SessionSummary, FITSFrame, CalibrationSummary } from '../../types';
-import { apiService, API_BASE_URL } from '../../services/api';
+import { apiService } from '../../services/api';
+import { safeFixed } from '../../utils/targetUtils';
 import { 
   Layers, 
   Eye, 
@@ -36,12 +37,18 @@ export const FITSExplorer: React.FC<FITSExplorerProps> = ({
   useEffect(() => {
     let isCancelled = false;
     const loadFrames = async () => {
+      if (!selectedSession?.session_id) {
+        setFrames([]);
+        setSelectedFrame(null);
+        return;
+      }
       setIsLoadingFrames(true);
       try {
         const data = await apiService.getSessionFrames(selectedSession.session_id);
         if (!isCancelled) {
-          setFrames(data);
-          if (data.length > 0) setSelectedFrame(data[0]);
+          setFrames(data || []);
+          if (data && data.length > 0) setSelectedFrame(data[0]);
+          else setSelectedFrame(null);
         }
       } catch (err) {
         console.warn('Failed loading frames:', err);
@@ -87,7 +94,7 @@ export const FITSExplorer: React.FC<FITSExplorerProps> = ({
             </h2>
           </div>
           <p className="text-xs text-textSecondary mt-1">
-            Real CCD frames from Cecilia 6" telescope • Session {selectedSession.session_id} ({frames.length} exposures)
+            Real CCD frames from Cecilia 6" telescope • Session {selectedSession?.session_id || 'N/A'} ({frames.length} exposures)
           </p>
         </div>
       </div>
@@ -118,11 +125,11 @@ export const FITSExplorer: React.FC<FITSExplorerProps> = ({
           <div className="text-xs text-textSecondary space-y-1.5 font-mono">
             <div className="flex justify-between">
               <span>Host Target:</span>
-              <span className="text-textPrimary font-bold">{selectedTarget.target}</span>
+              <span className="text-textPrimary font-bold">{selectedTarget?.target || 'Target'}</span>
             </div>
             <div className="flex justify-between">
               <span>Sky Coordinates:</span>
-              <span className="text-textPrimary">{selectedTarget.ra_deg.toFixed(3)}° RA / {selectedTarget.dec_deg.toFixed(3)}° Dec</span>
+              <span className="text-textPrimary">{safeFixed(selectedTarget?.ra_deg, 3)}° RA / {safeFixed(selectedTarget?.dec_deg, 3)}° Dec</span>
             </div>
             <div className="flex justify-between">
               <span>Aperture Radius:</span>
@@ -290,15 +297,15 @@ export const FITSExplorer: React.FC<FITSExplorerProps> = ({
                 Active Frame Inspection
               </span>
               <h3 className="text-base font-bold text-textPrimary font-mono">
-                {selectedSession.session_id} • Exposure #{selectedFrame.frame_index}
+                {selectedSession?.session_id || ''} • Exposure #{selectedFrame.frame_index}
               </h3>
             </div>
             <div className="flex items-center gap-2 font-mono text-xs">
               <span className="px-2.5 py-1 rounded bg-blue-950/50 border border-blue-800/40 text-blue-300">
-                Airmass: {selectedFrame.airmass.toFixed(3)}
+                Airmass: {safeFixed(selectedFrame.airmass, 3)}
               </span>
               <span className="px-2.5 py-1 rounded bg-emerald-950/50 border border-emerald-800/40 text-telemetryGreen">
-                Contrast: {selectedFrame.peak_contrast.toFixed(2)}
+                Contrast: {safeFixed(selectedFrame.peak_contrast, 2)}
               </span>
             </div>
           </div>
@@ -308,7 +315,7 @@ export const FITSExplorer: React.FC<FITSExplorerProps> = ({
             {/* Real Telescope Image WebP */}
             <div className="md:col-span-7 bg-black rounded-xl border border-borderHairline p-3 flex flex-col items-center justify-center relative overflow-hidden group">
               <img
-                src={apiService.getFrameImageUrl(selectedSession.session_id, selectedFrame.frame_index)}
+                src={selectedSession?.session_id ? apiService.getFrameImageUrl(selectedSession.session_id, selectedFrame.frame_index) : '/assets/nasa_fov_apertures.png'}
                 alt={`Frame ${selectedFrame.frame_index}`}
                 className="w-full h-80 object-contain rounded-lg"
                 onError={(e) => {
@@ -324,29 +331,29 @@ export const FITSExplorer: React.FC<FITSExplorerProps> = ({
             <div className="md:col-span-5 space-y-2.5 font-mono text-xs">
               <div className="p-2.5 rounded-lg bg-canvas border border-borderHairline flex justify-between">
                 <span className="text-textSecondary">Timestamp UTC:</span>
-                <span className="text-textPrimary">{selectedFrame.t_utc}</span>
+                <span className="text-textPrimary">{selectedFrame.t_utc || '—'}</span>
               </div>
               <div className="p-2.5 rounded-lg bg-canvas border border-borderHairline flex justify-between">
                 <span className="text-textSecondary">Telescope Altitude:</span>
-                <span className="text-textPrimary">{selectedFrame.TELALT.toFixed(2)}°</span>
+                <span className="text-textPrimary">{safeFixed(selectedFrame.TELALT, 2)}°</span>
               </div>
               <div className="p-2.5 rounded-lg bg-canvas border border-borderHairline flex justify-between">
                 <span className="text-textSecondary">Sky Background:</span>
-                <span className="text-textPrimary">{selectedFrame.sky_level} ADU (σ = {selectedFrame.sky_sigma.toFixed(2)})</span>
+                <span className="text-textPrimary">{selectedFrame.sky_level ?? '—'} ADU (σ = {safeFixed(selectedFrame.sky_sigma, 2)})</span>
               </div>
               <div className="p-2.5 rounded-lg bg-canvas border border-borderHairline flex justify-between">
                 <span className="text-textSecondary">Detected Source Pixels:</span>
-                <span className="text-textPrimary">{selectedFrame.n_source_px} px</span>
+                <span className="text-textPrimary">{selectedFrame.n_source_px ?? '—'} px</span>
               </div>
               <div className="p-2.5 rounded-lg bg-canvas border border-borderHairline flex justify-between">
                 <span className="text-textSecondary">Saturated Pixels:</span>
-                <span className={selectedFrame.n_saturated > 0 ? 'text-alertRose' : 'text-telemetryGreen'}>
-                  {selectedFrame.n_saturated} px
+                <span className={(selectedFrame.n_saturated ?? 0) > 0 ? 'text-alertRose' : 'text-telemetryGreen'}>
+                  {selectedFrame.n_saturated ?? 0} px
                 </span>
               </div>
               <div className="p-2.5 rounded-lg bg-canvas border border-borderHairline flex justify-between">
                 <span className="text-textSecondary">Camera Temperature:</span>
-                <span className="text-textPrimary">{selectedFrame.CAMTEMP} K</span>
+                <span className="text-textPrimary">{selectedFrame.CAMTEMP ?? '—'} K</span>
               </div>
             </div>
           </div>

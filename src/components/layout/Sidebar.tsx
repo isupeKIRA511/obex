@@ -13,6 +13,7 @@ import {
   Scale
 } from 'lucide-react';
 import { Target } from '../../types';
+import { safeFixed, isSameTarget } from '../../utils/targetUtils';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -138,20 +139,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="p-3.5 rounded-xl bg-card border border-borderHairline hover:border-opticsCyan/40 transition-all duration-300 transform hover:-translate-y-0.5 space-y-2.5 group">
             <div className="flex items-center justify-between text-[11px] font-mono">
               <span className="text-textMuted uppercase group-hover:text-textSecondary transition-colors">Active System</span>
-              <span className="text-opticsCyan font-bold">{selectedTarget.target} b</span>
+              <span className="text-opticsCyan font-bold">{selectedTarget?.target || 'Target'} b</span>
             </div>
 
             <select
-              value={selectedTarget.target}
+              value={selectedTarget?.target || ''}
               onChange={(e) => {
-                const t = targets.find((item) => item.target === e.target.value);
+                const t = targets.find((item) => isSameTarget(item.target, e.target.value));
                 if (t) setSelectedTarget(t);
               }}
               className="w-full bg-canvas border border-borderHairline rounded-lg px-2.5 py-1.5 text-xs font-mono text-textPrimary focus:outline-none focus:border-opticsCyan cursor-pointer transition-colors"
             >
               {targets.map((t) => (
                 <option key={t.target} value={t.target}>
-                  {t.target} ({t.nights} Nights • V={t.v_mag})
+                  {t.target} ({t.nights} Nights • V={safeFixed(t.v_mag, 2)})
                 </option>
               ))}
             </select>
@@ -159,11 +160,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-textMuted pt-1">
               <div className="bg-canvas p-1.5 rounded border border-borderHairline group-hover:border-borderSubtle transition-colors">
                 <span>Depth: </span>
-                <span className="text-textPrimary font-bold">{selectedTarget.transit_depth_pct}%</span>
+                <span className="text-textPrimary font-bold">{safeFixed(selectedTarget?.transit_depth_pct, 2)}%</span>
               </div>
               <div className="bg-canvas p-1.5 rounded border border-borderHairline group-hover:border-borderSubtle transition-colors">
                 <span>Period: </span>
-                <span className="text-textPrimary font-bold">{selectedTarget.period_days}d</span>
+                <span className="text-textPrimary font-bold">{safeFixed(selectedTarget?.period_days, 2)}d</span>
               </div>
             </div>
           </div>

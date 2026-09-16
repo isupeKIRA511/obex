@@ -7,6 +7,7 @@ import {
   KpiDashboardResponse 
 } from '../../types';
 import { apiService, FALLBACK_KPIS } from '../../services/api';
+import { safeFixed } from '../../utils/targetUtils';
 import { 
   Atom, 
   CheckCircle2, 
@@ -306,25 +307,25 @@ export const AstrophysicsValidation: React.FC = () => {
                       <div className="text-[10px] text-textMuted">Unit: {row.unit}</div>
                     </td>
                     <td className="p-3 text-opticsCyan font-bold">
-                      {typeof row.derived === 'number' ? row.derived.toFixed(4) : row.derived}
+                      {typeof row.derived === 'number' ? safeFixed(row.derived, 4) : (row.derived || '—')}
                       {row.derived_err ? (
-                        <span className="text-[10px] text-textMuted font-normal"> ± {row.derived_err.toFixed(4)}</span>
+                        <span className="text-[10px] text-textMuted font-normal"> ± {safeFixed(row.derived_err, 4)}</span>
                       ) : null}
                     </td>
                     <td className="p-3 text-textPrimary">
-                      {typeof row.published === 'number' ? row.published.toFixed(4) : row.published}
+                      {typeof row.published === 'number' ? safeFixed(row.published, 4) : (row.published || '—')}
                       {row.published_err ? (
-                        <span className="text-[10px] text-textMuted font-normal"> ± {row.published_err.toFixed(4)}</span>
+                        <span className="text-[10px] text-textMuted font-normal"> ± {safeFixed(row.published_err, 4)}</span>
                       ) : null}
                     </td>
                     <td className="p-3">
-                      <span className={Math.abs(row.pct_diff) < 5 ? 'text-telemetryGreen' : 'text-textSecondary'}>
-                        {row.pct_diff > 0 ? `+${row.pct_diff.toFixed(2)}` : row.pct_diff.toFixed(2)}%
+                      <span className={typeof row.pct_diff === 'number' && Math.abs(row.pct_diff) < 5 ? 'text-telemetryGreen' : 'text-textSecondary'}>
+                        {typeof row.pct_diff === 'number' ? (row.pct_diff > 0 ? `+${safeFixed(row.pct_diff, 2)}` : `${safeFixed(row.pct_diff, 2)}`) : '—'}%
                       </span>
                     </td>
                     <td className="p-3">
-                      <span className={Math.abs(row.z_score) <= 2 ? 'text-telemetryGreen font-bold' : 'text-amber-400'}>
-                        {row.z_score.toFixed(2)} σ
+                      <span className={typeof row.z_score === 'number' && Math.abs(row.z_score) <= 2 ? 'text-telemetryGreen font-bold' : 'text-amber-400'}>
+                        {typeof row.z_score === 'number' ? `${safeFixed(row.z_score, 2)} σ` : '—'}
                       </span>
                     </td>
                     <td className="p-3">
@@ -372,7 +373,7 @@ export const AstrophysicsValidation: React.FC = () => {
                   {p.planet}
                 </h3>
                 <p className="text-xs text-textSecondary mt-0.5 font-mono">
-                  Host: {p.archive_host} • {p.distance_ly.toFixed(0)} ly away (Gaia)
+                  Host: {p.archive_host} • {safeFixed(p.distance_ly, 0)} ly away (Gaia)
                 </p>
               </div>
 
@@ -380,33 +381,33 @@ export const AstrophysicsValidation: React.FC = () => {
               <div className="space-y-2 font-mono text-xs pt-2 border-t border-borderHairline">
                 <div className="flex justify-between text-textSecondary">
                   <span>Semi-Major Axis:</span>
-                  <span className="text-textPrimary font-bold">{p.a_au.toFixed(4)} AU</span>
+                  <span className="text-textPrimary font-bold">{safeFixed(p.a_au, 4)} AU</span>
                 </div>
                 <div className="flex justify-between text-textSecondary">
                   <span>Orbital Velocity:</span>
-                  <span className="text-opticsCyan font-bold">{p.orbital_speed_kms.toFixed(1)} km/s</span>
+                  <span className="text-opticsCyan font-bold">{safeFixed(p.orbital_speed_kms, 1)} km/s</span>
                 </div>
                 <div className="flex justify-between text-textSecondary">
                   <span>Period:</span>
-                  <span className="text-textPrimary">{p.orbital_period_days.toFixed(3)} days</span>
+                  <span className="text-textPrimary">{safeFixed(p.orbital_period_days, 3)} days</span>
                 </div>
                 <div className="flex justify-between text-textSecondary">
                   <span>Equilibrium Temp:</span>
-                  <span className="text-calibAmber font-bold">{p.teq_k.toFixed(0)} K</span>
+                  <span className="text-calibAmber font-bold">{safeFixed(p.teq_k, 0)} K</span>
                 </div>
                 <div className="flex justify-between text-textSecondary">
                   <span>Incident Flux:</span>
-                  <span className="text-textPrimary">{p.insolation_earth.toFixed(0)}x Earth</span>
+                  <span className="text-textPrimary">{safeFixed(p.insolation_earth, 0)}x Earth</span>
                 </div>
                 <div className="flex justify-between text-textSecondary">
                   <span>Transit Duration:</span>
-                  <span className="text-textPrimary">{p.transit_duration_h.toFixed(2)} hours</span>
+                  <span className="text-textPrimary">{safeFixed(p.transit_duration_h, 2)} hours</span>
                 </div>
               </div>
 
               <div className="pt-3 border-t border-borderHairline text-[10px] text-textMuted font-mono flex items-center justify-between">
                 <span>Speed vs Earth:</span>
-                <span className="text-telemetryGreen font-bold">{p.orbital_speed_vs_earth.toFixed(1)}x faster</span>
+                <span className="text-telemetryGreen font-bold">{safeFixed(p.orbital_speed_vs_earth, 1)}x faster</span>
               </div>
             </div>
           ))}
