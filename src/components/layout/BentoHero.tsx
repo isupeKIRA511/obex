@@ -130,7 +130,7 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
             <div className="text-xs font-mono font-bold text-textPrimary flex items-center gap-2">
               <span>Robotic Photometric Pipeline • Cecilia 6&quot; Telescope</span>
               <span className="text-[10px] px-2 py-0.5 rounded bg-blue-950/60 border border-blue-800/40 text-blue-300">
-                Live API Connected
+                Live Telemetry Feed
               </span>
             </div>
             <div className="text-[11px] text-textSecondary font-mono">
@@ -233,7 +233,7 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
           <div className="flex items-center justify-between text-xs text-textSecondary mb-4">
             <span className="font-mono text-emerald-400">: NASA EXOPLANET HUB & HZ LAB</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-borderHairline text-emerald-400">
-              Kopparapu 2013 + TAP API
+              Kopparapu 2013 Model
             </span>
           </div>
 

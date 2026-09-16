@@ -145,7 +145,7 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
               Blind Transit Search Benchmark (2,723 Star-Nights Statistical Control)
             </h3>
           </div>
-          <span className="text-[10px] font-mono text-textMuted uppercase">GET /api/science/search</span>
+          <span className="text-[10px] font-mono text-opticsCyan uppercase">Statistical Control Floor</span>
         </div>
 
         <p className="text-xs text-textSecondary leading-relaxed">
@@ -204,7 +204,7 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
                 Empirical Environmental Correlations
               </h3>
             </div>
-            <span className="text-[10px] font-mono text-textMuted uppercase">GET /api/quality/correlations</span>
+            <span className="text-[10px] font-mono text-opticsCyan uppercase">Correlation Matrix</span>
           </div>
 
           <div className="space-y-3 font-mono text-xs">
@@ -235,7 +235,7 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
                 Photometric Noise Floor & Sensitivity
               </h3>
             </div>
-            <span className="text-[10px] font-mono text-textMuted uppercase">GET /api/quality/noise-floor</span>
+            <span className="text-[10px] font-mono text-telemetryGreen uppercase">Noise Limits</span>
           </div>
 
           <div className="space-y-3 font-mono text-xs">
@@ -273,7 +273,7 @@ export const QualityTriageHub: React.FC<QualityTriageHubProps> = ({ sessions, ta
                 Pipeline Automated Triage Thresholds
               </h3>
             </div>
-            <span className="text-[10px] font-mono text-textMuted">GET /api/quality/sessions</span>
+            <span className="text-[10px] font-mono text-calibAmber uppercase">Automated Calibration</span>
           </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">

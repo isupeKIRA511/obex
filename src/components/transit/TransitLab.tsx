@@ -1162,7 +1162,7 @@ export const TransitLab: React.FC<TransitLabProps> = ({
             {/* Footer Provenance */}
             <div className="flex items-center justify-between text-[11px] font-mono text-textMuted pt-1 border-t border-borderHairline/40">
               <span>Model: {explainData.model || 'Gemini 2.5 Flash'} · Grounded on telemetry for session {selectedSession?.session_id}</span>
-              <span className="text-purple-400">Endpoint: POST /api/explain</span>
+              <span className="text-purple-400">Autonomous Inference</span>
             </div>
           </div>
         ) : !isExplaining ? (

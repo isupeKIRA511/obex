@@ -165,9 +165,9 @@ export const FalsePositiveCases: React.FC<FalsePositiveCasesProps> = ({ cases })
               </div>
 
               <div className="pt-3 border-t border-borderHairline mt-4 flex items-center justify-between text-[11px] font-mono">
-                <span className="text-textMuted">Endpoint:</span>
+                <span className="text-textMuted">Diagnostic Status:</span>
                 <span className="text-opticsCyan truncate max-w-[150px]">
-                  {c.endpoint ? c.endpoint.split('/')[2] || c.endpoint : 'Hardware Limit'}
+                  {c.testable_with_our_data ? 'Verified by Photometry' : 'Hardware Limit'}
                 </span>
               </div>
             </div>
@@ -208,10 +208,10 @@ export const FalsePositiveCases: React.FC<FalsePositiveCasesProps> = ({ cases })
           </div>
 
           <div className="p-4 rounded-xl bg-canvas border border-borderHairline space-y-1.5">
-            <div className="text-[10px] text-textMuted uppercase">Live Pipeline Endpoint</div>
-            <p className="text-opticsCyan leading-relaxed truncate">{selectedCase.endpoint || 'Not resolvable at 5 arcsec/px'}</p>
+            <div className="text-[10px] text-textMuted uppercase">Diagnostic Pipeline Verification</div>
+            <p className="text-opticsCyan leading-relaxed truncate">{selectedCase.testable_with_our_data ? 'Differential Photometry Triage' : 'Physical Resolution Limit'}</p>
             <div className="text-[10px] text-textMuted pt-1">
-              {selectedCase.testable_with_our_data ? 'Verified via API telemetry' : 'Single Clear filter chromatic limit'}
+              {selectedCase.testable_with_our_data ? 'Verified via calibrated telemetry' : 'Single Clear filter chromatic limit'}
             </div>
           </div>
         </div>
@@ -229,7 +229,7 @@ export const FalsePositiveCases: React.FC<FalsePositiveCasesProps> = ({ cases })
                 32×32 Pixel Cutout AI Classifier (Amal's Module)
               </h3>
             </div>
-            <span className="text-xs font-mono text-textMuted">POST /api/classify</span>
+            <span className="text-xs font-mono text-opticsCyan">AI Neural Classifier</span>
           </div>
 
           <p className="text-xs text-textSecondary">
@@ -310,7 +310,7 @@ export const FalsePositiveCases: React.FC<FalsePositiveCasesProps> = ({ cases })
           </div>
 
           <div className="p-3.5 rounded-xl bg-canvas border border-borderHairline space-y-2 text-xs font-mono">
-            <div className="text-textMuted text-[10px] uppercase">API Model Provenance & Validation:</div>
+            <div className="text-textMuted text-[10px] uppercase">Model Provenance & Validation:</div>
             <p className="text-[11px] text-textSecondary font-sans leading-relaxed">
               {modelMetrics?.validation_protocol || modelInfo?.validation_protocol || 'Split by NIGHT, never at random. Frames within one night are heavily correlated, so a random split leaks and inflates the score.'}
             </p>
@@ -333,7 +333,7 @@ export const FalsePositiveCases: React.FC<FalsePositiveCasesProps> = ({ cases })
                 Empirical 6-Class Validation Metrics (44,143 Cutouts Ingested)
               </h3>
             </div>
-            <span className="text-[10px] font-mono text-textMuted uppercase">GET /api/model/metrics</span>
+            <span className="text-[10px] font-mono text-telemetryGreen uppercase">Precision Benchmarked</span>
           </div>
 
           <div className="overflow-x-auto rounded-xl border border-borderHairline">

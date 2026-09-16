@@ -224,7 +224,7 @@ export const FITSExplorer: React.FC<FITSExplorerProps> = ({
               Sensor Thermal Response & Multi-Temperature Master Dark Array
             </h3>
           </div>
-          <span className="text-[10px] font-mono text-textMuted uppercase">GET /api/calibration/dark-masters</span>
+          <span className="text-[10px] font-mono text-calibAmber uppercase">Multi-Temp Calibration</span>
         </div>
 
         <p className="text-xs text-textSecondary leading-relaxed">
