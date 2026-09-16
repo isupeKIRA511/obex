@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تقرير مشروع OBEX المتكامل - النسخة العربية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm 15mm 15mm 15mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      direction: ltr;
+      display: inline-block;
+    }
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #082f49 100%);
+      border: 1px solid #06b6d4;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.15);
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-left: 8px;
+      margin-bottom: 6px;
+    }
+    .badge-cyan { background: rgba(6, 182, 212, 0.15); border: 1px solid #06b6d4; color: #38bdf8; }
+    .badge-green { background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; }
+    .badge-purple { background: rgba(168, 85, 247, 0.15); border: 1px solid #a855f7; color: #c084fc; }
+    .badge-amber { background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; }
+    
+    h1 { margin: 0 0 8px 0; font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; }
+    h2 { font-size: 18px; font-weight: 800; color: #38bdf8; border-bottom: 2px solid rgba(56, 189, 248, 0.25); padding-bottom: 6px; margin-top: 24px; margin-bottom: 12px; }
+    h3 { font-size: 15px; font-weight: 700; color: #a855f7; margin-top: 14px; margin-bottom: 6px; }
+    p { margin: 0 0 10px 0; color: #cbd5e1; text-align: justify; }
+    
+    .card {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+    }
+    .card-highlight {
+      border-color: rgba(6, 182, 212, 0.4);
+      background: #0f172a;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 11.5px;
+    }
+    th, td {
+      padding: 8px 10px;
+      text-align: right;
+      border: 1px solid #1f2937;
+    }
+    th {
+      background-color: #1e293b;
+      color: #38bdf8;
+      font-weight: 700;
+    }
+    td {
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+    tr:nth-child(even) td {
+      background-color: #131d31;
+    }
+    .footer {
+      margin-top: 24px;
+      border-top: 1px solid #334155;
+      padding-top: 10px;
+      font-size: 10px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+    }
+    .page-break {
+      page-break-after: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header-banner">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <div>
+        <span class="badge badge-cyan">OBEX AEROSPACE DISCOVERY SUITE</span>
+        <span class="badge badge-green">VERIFIED ASTROPHYSICS ENGINE</span>
+        <span class="badge badge-purple">GEMINI 2.5 FLASH GROUNDED</span>
+      </div>
+      <span class="mono" style="font-size: 11px; color: #94a3b8;">Release: Production v1.0.0</span>
+    </div>
+    <h1>🪐 تقرير المشروع المتكامل والوثيقة الهندسية لمنصة OBEX</h1>
+    <p style="margin: 0; font-size: 13px; color: #94a3b8;">
+      نظام الحوسبة الفلكية المتقدم لاكتشاف وتحليل فيزياء عبور الكواكب النجمية ونطاقات الحياة والمهمات بين النجمية
+    </p>
+  </div>
+
+  <!-- 1. الملخص التنفيذي -->
+  <h2>1. الملخص التنفيذي وفكرة المشروع (Executive Summary)</h2>
+  <p>
+    منصة <strong>OBEX</strong> هي جناح برمجيات فلكية وهندسية متطورة تم بناؤها لسد الفجوة بين البيانات الرصدية الخام الملتقطة بواسطة التلسكوبات الأرضية، وبين النماذج الفيزيائية النظرية المعتمدة عالمياً لدى وكالة الفضاء الأمريكية (NASA).
+  </p>
+  <p>
+    يقوم النظام بمعالجة التدفقات الضوئية (<span class="mono">Differential Light Curves</span>)، واكتشاف انخفاضات السطوع الناجمة عن عبور الكواكب أمام نجومها المضيفة، وطي الأطوار متعدد الليالي (<span class="mono">Phase Folding</span>)، ومعايرة حساسات الـ CCD، واستبعاد 11 سيناريو خداعي للإيجابيات الكاذبة، وحساب ديناميكا المهمات بين النجمية وفق النسبية الخاصة، وتوليد شروحات علمية ذكية وفورية عبر نموذج <strong style="color: #c084fc;">Gemini 2.5 Flash</strong>.
+  </p>
+
+  <div class="grid-3" style="margin: 14px 0;">
+    <div class="card card-highlight">
+      <div style="font-size: 11px; color: #38bdf8; font-weight: 700;">تحسين دقة الإشارة (SNR)</div>
+      <div class="mono" style="font-size: 20px; font-weight: 700; color: #34d399; margin: 4px 0;">&gt; 2.5× Gain</div>
+      <div style="font-size: 10.5px; color: #94a3b8;">طرح الضوضاء الجوية بالنجوم المقارنة</div>
+    </div>
+    <div class="card card-highlight">
+      <div style="font-size: 11px; color: #c084fc; font-weight: 700;">التوافق مع أرشيف ناسا</div>
+      <div class="mono" style="font-size: 20px; font-weight: 700; color: #c084fc; margin: 4px 0;">48/48 Checks</div>
+      <div style="font-size: 10.5px; color: #94a3b8;">مطابقة فيزيائية إحصائية |z| ≤ 2</div>
+    </div>
+    <div class="card card-highlight">
+      <div style="font-size: 11px; color: #fbbf24; font-weight: 700;">دقة المصنف العصبي CNN</div>
+      <div class="mono" style="font-size: 20px; font-weight: 700; color: #fbbf24; margin: 4px 0;">94.2% Macro F1</div>
+      <div style="font-size: 10.5px; color: #94a3b8;">44,143 قصاصة فلكية تم تدريبها</div>
+    </div>
+  </div>
+
+  <!-- 2. ركائز البيانات والأجهزة الفلكية -->
+  <h2>2. الركائز العلمية والبيانات الرصدية (Data Foundations)</h2>
+  
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="color: #38bdf8;">🔭 1. تلسكوب سيسيليا 6 بوصة (Cecilia Telescope)</h3>
+      <p style="font-size: 12px;">
+        يعتمد المشروع على بيانات الرصد الحقيقية الملتقطة من تلسكوب <span class="mono">MicroObservatory Cecilia 6"</span> التابع لمرصد هارفارد-سميثسونيان، متضمناً 1,681 إطاراً علمياً و60 إطاراً مظلماً عبر 22 جلسة رصدية.
+      </p>
+    </div>
+    <div class="card">
+      <h3 style="color: #34d399;">🛰️ 2. أرشيف ناسا للكواكب (NASA TAP API)</h3>
+      <p style="font-size: 12px;">
+        ربط مباشر ببروتوكول <span class="mono">TAP (Table Access Protocol)</span> التابع لـ Caltech/IPAC لجلب أحدث البيانات المنشورة لكواكب TESS وKepler ومطابقتها اللحظية مع قياساتنا.
+      </p>
+    </div>
+  </div>
+
+  <!-- 3. الذكاء الاصطناعي والاستدلال العلمي -->
+  <h2>3. محرك الاستدلال والذكاء الاصطناعي (Gemini 2.5 Flash)</h2>
+  <div class="card" style="border-right: 4px solid #a855f7;">
+    <p>
+      تم تزويد المنصة بنظام تفسير علمي مؤرض بالبيانات الرصدية، حيث يتم تمرير المنحنى الضوئي، وعمق العبور، والمدة الزمنية، والإحداثيات الاستوائية إلى نموذج <strong>Gemini 2.5 Flash</strong> عبر الـ API لتقديم:
+    </p>
+    <ul style="margin: 6px 0 0 0; padding-right: 20px; font-size: 12px; color: #cbd5e1;">
+      <li><strong>شرح ثنائي اللغة (عربي / إنجليزي):</strong> مخصص لثلاث فئات (طلاب، فلكيون وباحثون، والجمهور العام).</li>
+      <li><strong>الاستنتاجات الفيزيائية:</strong> إثبات كروية الكوكب، تقدير نصف القطر بالنسبة لنصف قطر النجم (<span class="mono">Rp/R*</span>)، وفحص إمكانية وجود غلاف جوي.</li>
+      <li><strong>الحدود المنهجية والمحاذير:</strong> توضيح قيود الدقة الرصدية للتلسكوبات الأرضية بدقة ومصداقية أكاديمية.</li>
+    </ul>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- 4. الوحدات السبع للمنصة -->
+  <h2>4. الأقسام والوحدات الاستكشافية السبع (Exploration Modules)</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">الوحدة</th>
+        <th style="width: 15%;">المسار</th>
+        <th>الوظيفة والقدرات العلمية</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. غرفة العمليات (Mission Control)</strong></td>
+        <td><span class="mono">#bento</span></td>
+        <td>لوحة قيادة تفاعلية تضم مؤشرات الأداء الحية، ونسب التحسين، وبطاقات التوجيه السريع للأقسام.</td>
+      </tr>
+      <tr>
+        <td><strong>2. مختبر العبور الضوئي (Transit Lab)</strong></td>
+        <td><span class="mono">#transit</span></td>
+        <td>رسم المنحنى الضوئي بدقة، طي الأطوار متعدد الليالي، واستدعاء ذكاء Gemini الاصطناعي وتصدير الـ PDF.</td>
+      </tr>
+      <tr>
+        <td><strong>3. مستكشف FITS والمعايرة (FITS Hub)</strong></td>
+        <td><span class="mono">#fits</span></td>
+        <td>فحص الإطارات الفلكية الخام، طرح الإطار المظلم، وحساب تضاعف الضوضاء الحرارية كل ~6 درجات مئوية.</td>
+      </tr>
+      <tr>
+        <td><strong>4. التحقق الفيزيائي (Astrophysics)</strong></td>
+        <td><span class="mono">#physics</span></td>
+        <td>فحص 48 معادلة فلكية ومطابقتها مع كبلر الثالث، إشعاع ستيفان-بولتزمان، ونصف قطر روش.</td>
+      </tr>
+      <tr>
+        <td><strong>5. فرز الجودة والإحصاء (Quality Triage)</strong></td>
+        <td><span class="mono">#quality</span></td>
+        <td>فرز 22 جلسة رصدية، اختبار البحث الأعمى عبر 2,723 ليلة نجمية، ومصفوفة الارتباط البيئي.</td>
+      </tr>
+      <tr>
+        <td><strong>6. مصفوفة التشخيص (Diagnostic Matrix)</strong></td>
+        <td><span class="mono">#diagnostic</span></td>
+        <td>استبعاد 11 حالة إيجابية خاطئة مع مصنف ذكاء اصطناعي تفاعلي للقصاصات المقطوعة (32x32 Cutouts).</td>
+      </tr>
+      <tr>
+        <td><strong>7. مركز ناسا ونطاق الحياة (Exoplanet Hub)</strong></td>
+        <td><span class="mono">#exoplanethub</span></td>
+        <td>استكشاف أرشيف ناسا، حساب نطاق كبارابو 2013 للحياة، وحاسبة المهمات بين النجمية بالنسبية الخاصة.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 5. الحسابات النسبية ونطاق الحياة -->
+  <h2>5. الفيزياء الفلكية والميكانيكا النسبية (Relativistic & Habitability Physics)</h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="color: #38bdf8;">🪐 نطاق الصلاحية للحياة (Kopparapu 2013)</h3>
+      <p style="font-size: 11.5px;">
+        حساب حدود الإشعاع الفعال والمسافة الفلكية بالوحدات الفلكية (AU):
+      </p>
+      <div class="mono" style="font-size: 11px; background: #0f172a; padding: 6px; border-radius: 6px; color: #38bdf8; display: block;">
+        d = √(L* / Seff)<br>
+        Teq = Teff × √(R* / 2a) × (1 - A)^(1/4)
+      </div>
+      <p style="font-size: 11px; margin-top: 6px; color: #94a3b8;">
+        يميز بدقة بين الاحتباس الحراري الجامح (Runaway Greenhouse) والحد الأقصى لغاز CO2.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3 style="color: #c084fc;">🚀 ميكانيكا المهمات بين النجمية (Special Relativity)</h3>
+      <p style="font-size: 11.5px;">
+        حساب تمدد الزمن الفلكي عند سرعات تقارب سرعة الضوء (<span class="mono">β = v/c</span>):
+      </p>
+      <div class="mono" style="font-size: 11px; background: #0f172a; padding: 6px; border-radius: 6px; color: #c084fc; display: block;">
+        γ = 1 / √(1 - β²)<br>
+        τ = t_earth / γ  |  Δt = t_earth - τ
+      </div>
+      <p style="font-size: 11px; margin-top: 6px; color: #94a3b8;">
+        يحسب سنوات عمر الطاقم المحفوظة بيولوجياً بدقة فيزيائية تامة.
+      </p>
+    </div>
+  </div>
+
+  <!-- 6. البنية البرمجية للفرونت إند -->
+  <h2>6. التقنيات المستعملة في الواجهة الأمامية (Frontend Tech Stack)</h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <strong style="color: #38bdf8;">• React 18 & TypeScript:</strong>
+      <p style="font-size: 11.5px; margin-top: 2px;">
+        بنية مكونات معيارية عالية الأداء مع صرامة في الأنواع البرمجية (Strict Typing) للبيانات الفلكية وحمايتها من أخطاء الـ Runtime.
+      </p>
+    </div>
+    <div class="card">
+      <strong style="color: #34d399;">• Tailwind CSS & Custom Theme:</strong>
+      <p style="font-size: 11.5px; margin-top: 2px;">
+        نظام تصميم فضائي داكن فاخر مع حواف موحدة <span class="mono">rounded-xl</span> وألوان سيبرانية متناسقة وتأثيرات زجاجية راقية.
+      </p>
+    </div>
+    <div class="card">
+      <strong style="color: #fbbf24;">• Vite 6 & ES Modules:</strong>
+      <p style="font-size: 11.5px; margin-top: 2px;">
+        تجميع سريع جداً وبناء إنتاجي خفيف مع زمن تحميل فوري وتحديث حي للوحدات (HMR).
+      </p>
+    </div>
+    <div class="card">
+      <strong style="color: #c084fc;">• jsPDF & High-DPI Canvas:</strong>
+      <p style="font-size: 11.5px; margin-top: 2px;">
+        محرك تصدير ملفات PDF ثنائية اللغة عالي الجودة يدعم اللغة العربية بدقة 300 DPI مع تشبيك الحروف وتنسيق الجداول.
+      </p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>منصة OBEX للاكتشاف الفلكي • مشروع مفتوح المصدر (MIT License)</span>
+    <span>وثيقة التقرير الفني الشامل • تم التصدير في سبتمبر 2026</span>
+  </div>
+
+</body>
+</html>

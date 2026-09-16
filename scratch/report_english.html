@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>OBEX Comprehensive Project Report - English Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm 15mm 15mm 15mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      display: inline-block;
+    }
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #082f49 100%);
+      border: 1px solid #06b6d4;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.15);
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-right: 8px;
+      margin-bottom: 6px;
+    }
+    .badge-cyan { background: rgba(6, 182, 212, 0.15); border: 1px solid #06b6d4; color: #38bdf8; }
+    .badge-green { background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; }
+    .badge-purple { background: rgba(168, 85, 247, 0.15); border: 1px solid #a855f7; color: #c084fc; }
+    .badge-amber { background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; }
+    
+    h1 { margin: 0 0 8px 0; font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; }
+    h2 { font-size: 18px; font-weight: 800; color: #38bdf8; border-bottom: 2px solid rgba(56, 189, 248, 0.25); padding-bottom: 6px; margin-top: 24px; margin-bottom: 12px; }
+    h3 { font-size: 15px; font-weight: 700; color: #a855f7; margin-top: 14px; margin-bottom: 6px; }
+    p { margin: 0 0 10px 0; color: #cbd5e1; text-align: justify; }
+    
+    .card {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+    }
+    .card-highlight {
+      border-color: rgba(6, 182, 212, 0.4);
+      background: #0f172a;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 11.5px;
+    }
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      border: 1px solid #1f2937;
+    }
+    th {
+      background-color: #1e293b;
+      color: #38bdf8;
+      font-weight: 700;
+    }
+    td {
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+    tr:nth-child(even) td {
+      background-color: #131d31;
+    }
+    .footer {
+      margin-top: 24px;
+      border-top: 1px solid #334155;
+      padding-top: 10px;
+      font-size: 10px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+    }
+    .page-break {
+      page-break-after: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header-banner">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <div>
+        <span class="badge badge-cyan">OBEX AEROSPACE DISCOVERY SUITE</span>
+        <span class="badge badge-green">VERIFIED ASTROPHYSICS ENGINE</span>
+        <span class="badge badge-purple">GEMINI 2.5 FLASH GROUNDED</span>
+      </div>
+      <span class="mono" style="font-size: 11px; color: #94a3b8;">Release: Production v1.0.0</span>
+    </div>
+    <h1>🪐 OBEX: Comprehensive Project Report & Engineering Blueprint</h1>
+    <p style="margin: 0; font-size: 13px; color: #94a3b8;">
+      Advanced Astronomical Computing Suite for Exoplanet Transit Photometry, Habitability Analysis, and Relativistic Mission Physics
+    </p>
+  </div>
+
+  <!-- 1. Executive Summary -->
+  <h2>1. Executive Summary & Vision (Project Concept)</h2>
+  <p>
+    <strong>OBEX (Aerospace Exoplanet Discovery Suite)</strong> is a research-grade astronomical computing platform designed to bridge the gap between raw ground-based telescope telemetry and peer-reviewed astrophysical models published by NASA, Caltech, and international astronomical observatories.
+  </p>
+  <p>
+    The system ingests and processes differential photometric light curves, calculates transit depth dips ($\Delta F$), performs multi-epoch phase folding, models CCD thermal dark noise, systematically eliminates 11 distinct false-positive failure modes, simulates relativistic interstellar starflight trajectories, and generates telemetry-grounded AI science narratives via <strong style="color: #c084fc;">Gemini 2.5 Flash</strong>.
+  </p>
+
+  <div class="grid-3" style="margin: 14px 0;">
+    <div class="card card-highlight">
+      <div style="font-size: 11px; color: #38bdf8; font-weight: 700;">Photometric SNR Gain</div>
+      <div class="mono" style="font-size: 20px; font-weight: 700; color: #34d399; margin: 4px 0;">&gt; 2.5× Gain</div>
+      <div style="font-size: 10.5px; color: #94a3b8;">Ensemble reference normalization</div>
+    </div>
+    <div class="card card-highlight">
+      <div style="font-size: 11px; color: #c084fc; font-weight: 700;">NASA Archive Agreement</div>
+      <div class="mono" style="font-size: 20px; font-weight: 700; color: #c084fc; margin: 4px 0;">48/48 Checks</div>
+      <div style="font-size: 10.5px; color: #94a3b8;">Statistical bounds |z| ≤ 2</div>
+    </div>
+    <div class="card card-highlight">
+      <div style="font-size: 11px; color: #fbbf24; font-weight: 700;">CNN Cutout Accuracy</div>
+      <div class="mono" style="font-size: 20px; font-weight: 700; color: #fbbf24; margin: 4px 0;">94.2% Macro F1</div>
+      <div style="font-size: 10.5px; color: #94a3b8;">44,143 astronomical cutouts</div>
+    </div>
+  </div>
+
+  <!-- 2. Data Foundations -->
+  <h2>2. Empirical Data Foundations & Instrumentation</h2>
+  
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="color: #38bdf8;">🔭 1. MicroObservatory Cecilia 6" Telescope</h3>
+      <p style="font-size: 12px;">
+        Ground-based robotic photometry capturing 1,681 science exposures and 60 shutter-closed calibration dark frames across 22 observing sessions in the northern sky.
+      </p>
+    </div>
+    <div class="card">
+      <h3 style="color: #34d399;">🛰️ 2. NASA Exoplanet Archive TAP Protocol</h3>
+      <p style="font-size: 12px;">
+        Live programmatic access to the Caltech / IPAC Table Access Protocol (TAP), synchronizing published orbital periods, stellar radii, temperatures, and Gaia parallax distances.
+      </p>
+    </div>
+  </div>
+
+  <!-- 3. Autonomous AI Science Explainer -->
+  <h2>3. Autonomous AI Science Grounding (Gemini 2.5 Flash)</h2>
+  <div class="card" style="border-left: 4px solid #a855f7;">
+    <p>
+      The platform integrates an autonomous telemetry-grounded explainer powered by <strong>Gemini 2.5 Flash</strong>. Real-time light curve geometry, ingress/egress boundaries, and host stellar parameters are fed directly into the model to deliver:
+    </p>
+    <ul style="margin: 6px 0 0 0; padding-left: 20px; font-size: 12px; color: #cbd5e1;">
+      <li><strong>Bilingual Scientific Narratives:</strong> Arabic & English tailored for three distinct audiences (Students, Professional Astrophysicists, and the Public).</li>
+      <li><strong>Physical Derivation Synthesis:</strong> Transit depth interpretation, planet-to-star radius ratio ($R_p / R_*$), and atmospheric constraint evaluation.</li>
+      <li><strong>Observational Boundaries & Caveats:</strong> Honest appraisal of ground-based atmospheric seeing and scintillation limits.</li>
+    </ul>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- 4. Exploration Modules -->
+  <h2>4. The Seven Core Exploration Modules</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 25%;">Module</th>
+        <th style="width: 15%;">Route Hash</th>
+        <th>Scientific Scope & Engineering Functionality</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Mission Control Hub</strong></td>
+        <td><span class="mono">#bento</span></td>
+        <td>Bento Hero overview displaying live KPI metrics, SNR gains, and rapid navigation routing.</td>
+      </tr>
+      <tr>
+        <td><strong>2. Transit Photometry Lab</strong></td>
+        <td><span class="mono">#transit</span></td>
+        <td>Interactive SVG light curves, multi-night phase folding, Gemini AI explainer, and PDF dossier export.</td>
+      </tr>
+      <tr>
+        <td><strong>3. FITS Imaging & Calibration</strong></td>
+        <td><span class="mono">#fits</span></td>
+        <td>Raw CCD inspection, master dark subtraction, and Arrhenius ~6°C sensor thermal doubling analysis.</td>
+      </tr>
+      <tr>
+        <td><strong>4. Astrophysics Validation</strong></td>
+        <td><span class="mono">#physics</span></td>
+        <td>Automated benchmarking of 48 physical equations with Kepler III, Stefan-Boltzmann, and Roche radii.</td>
+      </tr>
+      <tr>
+        <td><strong>5. Quality & Triage Hub</strong></td>
+        <td><span class="mono">#quality</span></td>
+        <td>Classification of 22 observing sessions, 2,723 star-night blind search floor, and environmental correlations.</td>
+      </tr>
+      <tr>
+        <td><strong>6. Diagnostic Matrix</strong></td>
+        <td><span class="mono">#diagnostic</span></td>
+        <td>11-point false-positive elimination matrix and interactive 32×32 pixel cutout CNN classifier (94.2% accuracy).</td>
+      </tr>
+      <tr>
+        <td><strong>7. NASA Exoplanet Hub</strong></td>
+        <td><span class="mono">#exoplanethub</span></td>
+        <td>Live TAP archive queries, Kopparapu (2013) Habitable Zone analysis, and Special Relativity mission physics.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 5. Relativistic & Habitability Mechanics -->
+  <h2>5. Relativistic Starflight Mechanics & Habitability Engine</h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="color: #38bdf8;">🪐 Kopparapu (2013) Habitable Zone</h3>
+      <p style="font-size: 11.5px;">
+        Calculates 4th-order polynomial flux thresholds and spatial distance boundaries in AU:
+      </p>
+      <div class="mono" style="font-size: 11px; background: #0f172a; padding: 6px; border-radius: 6px; color: #38bdf8; display: block;">
+        d = √(L* / Seff)<br>
+        Teq = Teff × √(R* / 2a) × (1 - A)^(1/4)
+      </div>
+      <p style="font-size: 11px; margin-top: 6px; color: #94a3b8;">
+        Distinguishes Runaway Greenhouse (inner limit) from Maximum CO2 Condensation (outer limit).
+      </p>
+    </div>
+
+    <div class="card">
+      <h3 style="color: #c084fc;">🚀 Special Relativity Starflight Mechanics</h3>
+      <p style="font-size: 11.5px;">
+        Calculates time dilation and coordinate flight times at relativistic fractions of light ($\beta = v/c$):
+      </p>
+      <div class="mono" style="font-size: 11px; background: #0f172a; padding: 6px; border-radius: 6px; color: #c084fc; display: block;">
+        γ = 1 / √(1 - β²)<br>
+        τ = t_earth / γ  |  Δt = t_earth - τ
+      </div>
+      <p style="font-size: 11px; margin-top: 6px; color: #94a3b8;">
+        Quantifies biological time dilation savings for interstellar missions to target exoplanets.
+      </p>
+    </div>
+  </div>
+
+  <!-- 6. Frontend Technology Stack -->
+  <h2>6. Frontend Architecture & Technology Stack</h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <strong style="color: #38bdf8;">• React 18 & TypeScript:</strong>
+      <p style="font-size: 11.5px; margin-top: 2px;">
+        Modular component architecture with strict typing for astronomical datasets and crash-proof error boundaries.
+      </p>
+    </div>
+    <div class="card">
+      <strong style="color: #34d399;">• Tailwind CSS & Aerospace Design System:</strong>
+      <p style="font-size: 11.5px; margin-top: 2px;">
+        Custom dark aerospace palette with unified <span class="mono">rounded-xl</span> borders, glassmorphic cards, and telemetry tokens.
+      </p>
+    </div>
+    <div class="card">
+      <strong style="color: #fbbf24;">• Vite 6 & Optimized Bundling:</strong>
+      <p style="font-size: 11.5px; margin-top: 2px;">
+        Instant HMR development workflow and highly optimized production builds with fast load times.
+      </p>
+    </div>
+    <div class="card">
+      <strong style="color: #c084fc;">• jsPDF & High-DPI Canvas Engine:</strong>
+      <p style="font-size: 11.5px; margin-top: 2px;">
+        High-resolution 300 DPI PDF generation with offscreen canvas text shaping for Arabic & Latin scripts.
+      </p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>OBEX Aerospace Discovery Suite • Open Source MIT License</span>
+    <span>Comprehensive Engineering & Scientific Dossier • September 2026</span>
+  </div>
+
+</body>
+</html>
