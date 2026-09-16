@@ -342,7 +342,8 @@ export const TransitLab: React.FC<TransitLabProps> = ({
               selectedTarget,
               selectedSession,
               planetPhysics,
-              explainData
+              explainData,
+              measuredDepth: activeMeasuredDepth
             })}
             className="px-3 py-1.5 rounded-lg text-xs font-mono border border-borderHairline bg-canvas hover:border-opticsCyan text-textSecondary hover:text-white flex items-center gap-1.5 transition-all cursor-pointer"
             title={`Export PDF Dossier for ${selectedTarget?.target || 'Active Exoplanet'}`}

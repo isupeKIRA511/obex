@@ -150,13 +150,19 @@ export const ExoplanetHubMaster: React.FC = () => {
                   summary: `NASA Archive discovery (${selectedPlanet.discoverymethod}) orbiting ${selectedPlanet.hostname}.`,
                   catalog_inputs: {
                     target: selectedPlanet.pl_name,
+                    hostname: selectedPlanet.hostname,
+                    pl_name: selectedPlanet.pl_name,
                     pl_orbper: selectedPlanet.pl_orbper,
                     pl_orbsmax: selectedPlanet.pl_orbsmax,
                     pl_eqt: selectedPlanet.pl_eqt,
                     st_teff: selectedPlanet.st_teff,
                     st_lum: selectedPlanet.st_lum,
                     st_rad: selectedPlanet.st_rad,
-                    st_mass: selectedPlanet.st_mass
+                    st_mass: selectedPlanet.st_mass,
+                    sy_dist: selectedPlanet.sy_dist,
+                    sy_vmag: selectedPlanet.sy_vmag,
+                    ra: selectedPlanet.ra,
+                    dec: selectedPlanet.dec
                   }
                 }
               });
