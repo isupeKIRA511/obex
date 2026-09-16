@@ -22,7 +22,8 @@ import {
   TrendingDown, 
   Zap, 
   SlidersHorizontal,
-  Compass
+  Compass,
+  AlertTriangle
 } from 'lucide-react';
 
 interface TransitLabProps {
@@ -351,6 +352,20 @@ export const TransitLab: React.FC<TransitLabProps> = ({
                 <div className="flex items-center gap-3 text-opticsCyan font-mono text-xs">
                   <div className="w-4 h-4 border-2 border-opticsCyan border-t-transparent rounded-full animate-spin"></div>
                   <span>Streaming calibrated transit photometry from API...</span>
+                </div>
+              </div>
+            )}
+
+            {!isPhaseFolded && !isLoadingLightCurve && processedPoints.length === 0 && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10 pointer-events-none">
+                <div className="bg-canvasSubtle/90 border border-amber-800/40 rounded-xl p-4 max-w-md shadow-xl backdrop-blur-sm space-y-2 pointer-events-auto">
+                  <div className="flex items-center justify-center gap-2 text-calibAmber text-xs font-mono font-bold">
+                    <AlertTriangle className="w-4 h-4 text-calibAmber" />
+                    <span>Quality Triage Status: {selectedSession?.quality?.toUpperCase() || 'UNUSABLE'}</span>
+                  </div>
+                  <p className="text-[11px] text-textSecondary font-sans leading-relaxed">
+                    This session failed scientific quality triage (insufficient reference stars / high sky extinction). The backend pipeline did not generate a differential transit light curve.
+                  </p>
                 </div>
               </div>
             )}
