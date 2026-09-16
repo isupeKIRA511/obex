@@ -8,6 +8,7 @@ import { FalsePositiveCases } from './components/diagnostic/FalsePositiveCases';
 import { QualityTriageHub } from './components/quality/QualityTriageHub';
 import { CelestialSuite } from './components/3d/CelestialSuite';
 import { AstrophysicsValidation } from './components/physics/AstrophysicsValidation';
+import { ExoplanetHubMaster } from './components/exoplanetHub/ExoplanetHubMaster';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { findSessionForTarget } from './utils/targetUtils';
 import { apiService, FALLBACK_TARGETS, FALLBACK_SESSIONS, FALLBACK_META, FALLBACK_FALSE_POSITIVES } from './services/api';
@@ -160,7 +161,7 @@ export const App: React.FC = () => {
           />
 
           {/* Dynamic Workspace Canvas */}
-          <main className="flex-1 p-6 lg:p-8 flex flex-col items-center overflow-y-auto w-full">
+          <main className="flex-1 p-6 lg:p-8 flex flex-col items-center overflow-y-auto w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
             {activeTab === 'bento' && (
               <ErrorBoundary fallbackTitle="Mission Control Hub Error">
                 <BentoHero
@@ -168,6 +169,7 @@ export const App: React.FC = () => {
                   onExplore3D={() => handleTabChange('3d')}
                   onExploreDiagnostic={() => handleTabChange('diagnostic')}
                   onExplorePhysics={() => handleTabChange('physics')}
+                  onExploreHub={() => handleTabChange('exoplanethub')}
                   selectedTarget={selectedTarget}
                 />
               </ErrorBoundary>
@@ -215,6 +217,12 @@ export const App: React.FC = () => {
                   sessions={sessions} 
                   targets={targets} 
                 />
+              </ErrorBoundary>
+            )}
+
+            {activeTab === 'exoplanethub' && (
+              <ErrorBoundary fallbackTitle="NASA Exoplanet Hub Error">
+                <ExoplanetHubMaster />
               </ErrorBoundary>
             )}
 

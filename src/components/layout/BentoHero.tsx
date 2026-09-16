@@ -8,6 +8,7 @@ interface BentoHeroProps {
   onExplore3D: () => void;
   onExploreDiagnostic: () => void;
   onExplorePhysics?: () => void;
+  onExploreHub?: () => void;
   selectedTarget: Target;
 }
 
@@ -16,6 +17,7 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
   onExplore3D,
   onExploreDiagnostic,
   onExplorePhysics,
+  onExploreHub,
   selectedTarget
 }) => {
   const [kpis, setKpis] = useState<KpiDashboardResponse>(FALLBACK_KPIS);
@@ -164,6 +166,16 @@ export const BentoHero: React.FC<BentoHeroProps> = ({
             </div>
 
             <div className="flex items-center gap-2">
+              {onExploreHub && (
+                <button
+                  onClick={onExploreHub}
+                  className="px-4 py-2.5 rounded-full bg-canvas border border-borderHairline hover:border-emerald-500 text-textSecondary hover:text-white text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>NASA Exoplanet Hub</span>
+                </button>
+              )}
+
               {onExplorePhysics && (
                 <button
                   onClick={onExplorePhysics}

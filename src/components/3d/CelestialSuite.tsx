@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { Planet3D, PlanetPhysicalData } from '../../types';
 import { apiService } from '../../services/api';
-import { Globe, Compass, Info, Maximize2, RotateCcw, ExternalLink, Flame, Zap, Gauge } from 'lucide-react';
+import { Globe, Compass, Info, Maximize2, RotateCcw, ExternalLink, Flame, Zap, Gauge, Sparkles } from 'lucide-react';
 
 const SOLAR_PLANETS: Planet3D[] = [
   {
@@ -241,7 +241,7 @@ export const CelestialSuite: React.FC = () => {
     <div className="w-full max-w-7xl mx-auto space-y-6">
 
       {/* Header with Sub-tabs */}
-      <div className="bg-card border border-borderHairline rounded-2xl p-6 flex items-center justify-between flex-wrap gap-4">
+      <div className="bg-card border border-borderHairline rounded-2xl p-6 flex items-center justify-between flex-wrap gap-4 shadow-xl">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-aerospaceBlue"></span>
@@ -250,14 +250,14 @@ export const CelestialSuite: React.FC = () => {
             </h2>
           </div>
           <p className="text-xs text-textSecondary mt-1">
-            Real-time Keplerian orbital velocities, stellar distance, and equilibrium temperature mapping (WebGL 60 FPS)
+            Real-time Keplerian orbital velocities, stellar distance, 3D Cartesian star mapping, and equilibrium temperature (WebGL 60 FPS)
           </p>
         </div>
 
         <div className="flex items-center gap-2 bg-canvas p-1 rounded-xl border border-borderHairline text-xs font-mono">
           <button
             onClick={() => setActiveSubTab('exoplanets')}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
+            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeSubTab === 'exoplanets'
                 ? 'bg-aerospaceBlue text-white font-semibold shadow-md'
                 : 'text-textSecondary hover:text-textPrimary'
@@ -267,7 +267,7 @@ export const CelestialSuite: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveSubTab('solar')}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
+            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeSubTab === 'solar'
                 ? 'bg-aerospaceBlue text-white font-semibold shadow-md'
                 : 'text-textSecondary hover:text-textPrimary'
@@ -277,7 +277,7 @@ export const CelestialSuite: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveSubTab('nasa')}
-            className={`px-3 py-1.5 rounded-lg transition-all ${
+            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeSubTab === 'nasa'
                 ? 'bg-aerospaceBlue text-white font-semibold shadow-md'
                 : 'text-textSecondary hover:text-textPrimary'
@@ -429,7 +429,8 @@ export const CelestialSuite: React.FC = () => {
         </div>
       )}
 
-      {/* SUB-VIEW 2: Solar System Reference Planets */}
+
+      {/* SUB-VIEW 3: Solar System Reference Planets */}
       {activeSubTab === 'solar' && (
         <div className="space-y-4">
           <div className="relative w-full h-[540px] bg-canvas border border-borderHairline rounded-2xl overflow-hidden shadow-2xl">

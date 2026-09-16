@@ -27,10 +27,10 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
       </div>
 
-      {/* Center: TEAM NAME K.A.A - MATHEMATICALLY CENTERED */}
+      {/* Center: BRAND NAME OBEX - MATHEMATICALLY CENTERED */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
         <span className="font-mono text-3xl sm:text-4xl md:text-5xl font-black tracking-[0.25em] text-white select-none drop-shadow-[0_0_25px_rgba(255,255,255,0.15)]">
-          K.A.A
+          OBEX
         </span>
       </div>
 

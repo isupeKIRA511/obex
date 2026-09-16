@@ -473,3 +473,76 @@ export interface ExplainResponse {
   grounded_on: any;
 }
 
+// --- NASA Exoplanet Archive & Habitable Zone Hub Definitions ---
+export type HabitabilityStatus = 'habitable' | 'too_hot' | 'too_cold' | 'unknown';
+
+export interface HabitableZoneBoundaries {
+  innerBoundary: number; // AU (Runaway Greenhouse)
+  outerBoundary: number; // AU (Maximum Greenhouse)
+  innerOptimistic?: number; // AU (Recent Venus)
+  outerOptimistic?: number; // AU (Early Mars)
+  luminosity: number; // Solar luminosities (L_sun)
+  stellarRadius: number; // Solar radii (R_sun)
+  stellarTemp: number; // Kelvin
+}
+
+export interface HabitabilityClassification {
+  status: HabitabilityStatus;
+  isHabitable: boolean;
+  reason: string;
+  boundaries: HabitableZoneBoundaries | null;
+  equilibriumTempK?: number;
+  semiMajorAxisAU?: number;
+  passedSanityCheck: boolean;
+}
+
+export interface NASAArchiveExoplanet {
+  pl_name: string;
+  hostname: string;
+  disc_year?: number;
+  disc_facility?: string;
+  discoverymethod?: string;
+  pl_rade?: number; // Earth radii
+  pl_radj?: number; // Jupiter radii
+  pl_masse?: number; // Earth masses
+  pl_massj?: number; // Jupiter masses
+  pl_orbper?: number; // Days
+  pl_orbsmax?: number; // AU
+  pl_orbeccen?: number;
+  pl_eqt?: number; // Kelvin
+  st_teff?: number; // Kelvin
+  st_rad?: number; // Solar radii
+  st_mass?: number; // Solar masses
+  st_spectype?: string;
+  st_age?: number; // Gyr
+  st_met?: number; // Metallicity [dex]
+  st_logg?: number; // Surface gravity [log(cm/s²)]
+  ra?: number; // Right Ascension [deg]
+  dec?: number; // Declination [deg]
+  sy_dist?: number; // Distance in parsecs
+  sy_vmag?: number; // Visual magnitude
+  // Derived 3D coordinates & habitability
+  x?: number; // Parsecs
+  y?: number; // Parsecs
+  z?: number; // Parsecs
+  distance_ly?: number; // Light years
+  habitability?: HabitabilityClassification;
+}
+
+export interface MissionCalculation {
+  targetName: string;
+  distanceLy: number;
+  distanceKm: number;
+  velocityFractionC: number;
+  velocityKms: number;
+  lorentzGamma: number;
+  earthObserverYears: number;
+  spacecraftShipYears: number;
+  timeDilationSavedYears: number;
+  chemicalRocketYears: number;
+  voyager1Years: number;
+  feasibilityLevel: 'Current Tech' | 'Near-Future Relativistic' | 'Advanced Relativistic' | 'Extreme Deep Space';
+  kineticEnergyJoulesPerKg: number;
+}
+
+
